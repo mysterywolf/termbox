@@ -184,11 +184,9 @@ void tb_present(void);
 // is hidden by default.
 void tb_set_cursor(int cx, int cy);
 
-// Changes cell's parameters in the internal back buffer at the specified
-// position.
+// Changes cell's parameters in the internal back buffer at the specified position.
 void tb_put_cell(int x, int y, const struct tb_cell* cell);
-void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg,
-    uint32_t bg);
+void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg, uint32_t bg);
 
 // Copies the buffer from 'cells' at the specified position, assuming the
 // buffer is a two-dimensional array of size ('w' x 'h'), represented as a
@@ -277,7 +275,8 @@ int tb_select_output_mode(int mode);
 // event (one of TB_EVENT_* constants) or -1 if there was an error or 0 in case
 // there were no event during 'timeout' period.
 // timeout have been discarded. This function will always wait forever.
-int tb_peek_event(struct tb_event* event, int timeout);
+// Thus, this function is as same as tb_poll_event. It has been removed.
+// int tb_peek_event(struct tb_event* event, int timeout);
 
 // Wait for an event forever and fill the 'event' structure with it, when the
 // event is available. Returns the type of the event (one of TB_EVENT_

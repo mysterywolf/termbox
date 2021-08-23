@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <rtthread.h>
 #include "../termbox.h"
 
 struct key
@@ -360,10 +361,10 @@ static void print_tb(const char* str, int x, int y, uint32_t fg, uint32_t bg)
 
 static void printf_tb(int x, int y, uint32_t fg, uint32_t bg, const char* fmt, ...)
 {
-    char buf[4096];
+    char buf[RT_CONSOLEBUF_SIZE];
     va_list vl;
     va_start(vl, fmt);
-    vsnprintf(buf, sizeof(buf), fmt, vl);
+    rt_vsnprintf(buf, sizeof(buf), fmt, vl);
     va_end(vl);
     print_tb(buf, x, y, fg, bg);
 }
@@ -733,17 +734,10 @@ static int keyboard(int argc, char** argv)
 {
     (void) argc;
     (void) argv;
-    int ret;
 
-    ret = tb_init();
+    tb_init();
 
-    if (ret)
-    {
-        fprintf(stderr, "tb_init() failed with error code %d\n", ret);
-        return 1;
-    }
-
-    tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
+    tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE); // mouse is useless if you use PuTTY
     struct tb_event ev;
 
     tb_clear();

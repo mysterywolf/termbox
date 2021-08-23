@@ -1,4 +1,6 @@
 # Termbox for RT-Thread
+[中文说明文档](readme_cn.md)
+
 This repository forks from [nullgemm/termbox_next](https://github.com/nullgemm/termbox_next)
 
 ## Getting started

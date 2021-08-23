@@ -1,18 +1,8 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stddef.h>
 #include <fcntl.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <sys/select.h>
 #include <sys/ioctl.h>
-#include <sys/time.h>
 #include <unistd.h>
-#include <wchar.h>
 #include <wcwidth.h>
-
 #include <rtthread.h>
 #include "termbox.h"
 
@@ -48,7 +38,7 @@ static void memstream_write(struct memstream* s, void* source, size_t len)
         memstream_flush(s);
     }
 
-    memcpy(s->data + s->pos, data, len);
+    rt_memcpy(s->data + s->pos, data, len);
     s->pos += len;
 }
 
@@ -77,7 +67,7 @@ static void clear_ringbuffer(struct ringbuffer* r)
 
 static int init_ringbuffer(struct ringbuffer* r, size_t size)
 {
-    r->buf = (char*)malloc(size);
+    r->buf = (char*)rt_malloc(size);
 
     if (!r->buf)
     {
@@ -92,7 +82,7 @@ static int init_ringbuffer(struct ringbuffer* r, size_t size)
 
 static void free_ringbuffer(struct ringbuffer* r)
 {
-    free(r->buf);
+    rt_free(r->buf);
 }
 
 static size_t ringbuffer_free_space(struct ringbuffer* r)
@@ -139,7 +129,7 @@ static void ringbuffer_push(struct ringbuffer* r, const void* data, size_t size)
 
     if (r->begin == 0 && r->end == 0)
     {
-        memcpy(r->buf, data, size);
+        rt_memcpy(r->buf, data, size);
         r->begin = r->buf;
         r->end = r->buf + size - 1;
         return;
@@ -152,22 +142,22 @@ static void ringbuffer_push(struct ringbuffer* r, const void* data, size_t size)
         if ((size_t)(r->buf + (ptrdiff_t)r->size - r->begin) >= size)
         {
             // we can fit without cut
-            memcpy(r->end, data, size);
+            rt_memcpy(r->end, data, size);
             r->end += size - 1;
         }
         else
         {
             // make a cut
             size_t s = r->buf + r->size - r->end;
-            memcpy(r->end, data, s);
+            rt_memcpy(r->end, data, s);
             size -= s;
-            memcpy(r->buf, (char*)data + s, size);
+            rt_memcpy(r->buf, (char*)data + s, size);
             r->end = r->buf + size - 1;
         }
     }
     else
     {
-        memcpy(r->end, data, size);
+        rt_memcpy(r->end, data, size);
         r->end += size - 1;
     }
 }
@@ -190,7 +180,7 @@ static void ringbuffer_pop(struct ringbuffer* r, void* data, size_t size)
     {
         if (data)
         {
-            memcpy(data, r->begin, size);
+            rt_memcpy(data, r->begin, size);
         }
 
         r->begin += size;
@@ -201,7 +191,7 @@ static void ringbuffer_pop(struct ringbuffer* r, void* data, size_t size)
         {
             if (data)
             {
-                memcpy(data, r->begin, size);
+                rt_memcpy(data, r->begin, size);
             }
 
             r->begin += size;
@@ -212,14 +202,14 @@ static void ringbuffer_pop(struct ringbuffer* r, void* data, size_t size)
 
             if (data)
             {
-                memcpy(data, r->begin, s);
+                rt_memcpy(data, r->begin, s);
             }
 
             size -= s;
 
             if (data)
             {
-                memcpy((char*)data + s, r->buf, size);
+                rt_memcpy((char*)data + s, r->buf, size);
             }
 
             r->begin = r->buf + size;
@@ -241,20 +231,20 @@ static void ringbuffer_read(struct ringbuffer* r, void* data, size_t size)
 
     if (r->begin < r->end)
     {
-        memcpy(data, r->begin, size);
+        rt_memcpy(data, r->begin, size);
     }
     else
     {
         if ((size_t)(r->buf + (ptrdiff_t)r->size - r->begin) >= size)
         {
-            memcpy(data, r->begin, size);
+            rt_memcpy(data, r->begin, size);
         }
         else
         {
             size_t s = r->buf + r->size - r->begin;
-            memcpy(data, r->begin, s);
+            rt_memcpy(data, r->begin, s);
             size -= s;
-            memcpy((char*)data + s, r->buf, size);
+            rt_memcpy((char*)data + s, r->buf, size);
         }
     }
 }
@@ -631,7 +621,7 @@ static int parse_escape_seq(struct tb_event* event, const char* buf, int len)
     return 0;
 }
 
-static bool extract_event(struct tb_event* event, struct ringbuffer* inbuf,
+static rt_bool_t extract_event(struct tb_event* event, struct ringbuffer* inbuf,
     int inputmode)
 {
     char buf[BUFFER_SIZE_MAX + 1];
@@ -644,7 +634,7 @@ static bool extract_event(struct tb_event* event, struct ringbuffer* inbuf,
 
     if (nbytes == 0)
     {
-        return false;
+        return RT_FALSE;
     }
 
     ringbuffer_read(inbuf, buf, nbytes);
@@ -656,11 +646,11 @@ static bool extract_event(struct tb_event* event, struct ringbuffer* inbuf,
 
         if (n != 0)
         {
-            bool success = true;
+            rt_bool_t success = RT_TRUE;
 
             if (n < 0)
             {
-                success = false;
+                success = RT_FALSE;
                 n = -n;
             }
 
@@ -677,7 +667,7 @@ static bool extract_event(struct tb_event* event, struct ringbuffer* inbuf,
                 event->key = TB_KEY_ESC;
                 event->mod = 0;
                 ringbuffer_pop(inbuf, 0, 1);
-                return true;
+                return RT_TRUE;
             }
             else if (inputmode & TB_INPUT_ALT)
             {
@@ -686,8 +676,6 @@ static bool extract_event(struct tb_event* event, struct ringbuffer* inbuf,
                 ringbuffer_pop(inbuf, 0, 1);
                 return extract_event(event, inbuf, inputmode);
             }
-
-            assert(!"never got here");
         }
     }
 
@@ -702,7 +690,7 @@ static bool extract_event(struct tb_event* event, struct ringbuffer* inbuf,
         event->ch = 0;
         event->key = (uint16_t)buf[0];
         ringbuffer_pop(inbuf, 0, 1);
-        return true;
+        return RT_TRUE;
     }
 
     // feh... we got utf8 here
@@ -714,10 +702,10 @@ static bool extract_event(struct tb_event* event, struct ringbuffer* inbuf,
         utf8_char_to_unicode(&event->ch, buf);
         event->key = 0;
         ringbuffer_pop(inbuf, 0, utf8_char_length(buf[0]));
-        return true;
+        return RT_TRUE;
     }
 
-    return false;
+    return RT_FALSE;
 }
 
 
@@ -769,17 +757,14 @@ static void update_term_size(void);
 static void send_attr(uint32_t fg, uint32_t bg);
 static void send_char(int x, int y, uint32_t c);
 static void send_clear(void);
-static int wait_fill_event(struct tb_event* event, struct timeval* timeout);
+static int wait_fill_event(struct tb_event* event, void* unused);
 
 // may happen in a different thread
 static volatile int buffer_size_change_request;
 
 int tb_init(void)
 {
-    if (init_term() < 0)
-    {
-        return TB_EUNSUPPORTED_TERMINAL;
-    }
+    init_term();
 
     memstream_init(&write_buffer, STDOUT_FILENO, write_buffer_data,
         sizeof(write_buffer_data));
@@ -802,7 +787,6 @@ void tb_shutdown(void)
 {
     if (termw == -1)
     {
-        rt_kprintf("tb_shutdown() should not be called twice.\n");
         return;
     }
 
@@ -853,7 +837,7 @@ void tb_present(void)
                 continue;
             }
 
-            memcpy(front, back, sizeof(struct tb_cell));
+            rt_memcpy(front, back, sizeof(struct tb_cell));
             send_attr(back->fg, back->bg);
 
             if (w > 1 && x >= front_buffer.width - (w - 1))
@@ -976,7 +960,7 @@ void tb_blit(int x, int y, int w, int h, const struct tb_cell* cells)
 
     for (sy = 0; sy < hh; ++sy)
     {
-        memcpy(dst, src, size);
+        rt_memcpy(dst, src, size);
         dst += back_buffer.width;
         src += w;
     }
@@ -989,15 +973,7 @@ struct tb_cell* tb_cell_buffer(void)
 
 int tb_poll_event(struct tb_event* event)
 {
-    return wait_fill_event(event, 0);
-}
-
-int tb_peek_event(struct tb_event* event, int timeout)
-{
-    struct timeval tv;
-    tv.tv_sec = timeout / 1000;
-    tv.tv_usec = (timeout - (tv.tv_sec * 1000)) * 1000;
-    return wait_fill_event(event, &tv);
+    return wait_fill_event(event, RT_NULL);
 }
 
 int tb_width(void)
@@ -1185,8 +1161,8 @@ static void write_sgr(uint32_t fg, uint32_t bg)
 
 static void cellbuf_init(struct cellbuf* buf, int width, int height)
 {
-    buf->cells = (struct tb_cell*)malloc(sizeof(struct tb_cell) * width * height);
-    assert(buf->cells);
+    buf->cells = (struct tb_cell*)rt_malloc(sizeof(struct tb_cell) * width * height);
+    RT_ASSERT(buf->cells);
     buf->width = width;
     buf->height = height;
 }
@@ -1213,10 +1189,10 @@ static void cellbuf_resize(struct cellbuf* buf, int width, int height)
     {
         struct tb_cell* csrc = oldcells + (i * oldw);
         struct tb_cell* cdst = buf->cells + (i * width);
-        memcpy(cdst, csrc, sizeof(struct tb_cell) * minw);
+        rt_memcpy(cdst, csrc, sizeof(struct tb_cell) * minw);
     }
 
-    free(oldcells);
+    rt_free(oldcells);
 }
 
 static void cellbuf_clear(struct cellbuf* buf)
@@ -1234,13 +1210,13 @@ static void cellbuf_clear(struct cellbuf* buf)
 
 static void cellbuf_free(struct cellbuf* buf)
 {
-    free(buf->cells);
+    rt_free(buf->cells);
 }
 
 static void update_term_size(void)
 {
     struct winsize sz;
-    memset(&sz, 0, sizeof(sz));
+    rt_memset(&sz, 0, sizeof(sz));
 
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &sz);
 
@@ -1394,14 +1370,12 @@ static void update_size(void)
     send_clear();
 }
 
-static int wait_fill_event(struct tb_event* event, struct timeval* timeout)
+static int wait_fill_event(struct tb_event* event, void* unused)
 {
     size_t char_buf_len;
     char char_buf;
 
-    (void) timeout; //discarded
-
-    memset(event, 0, sizeof(struct tb_event));
+    rt_memset(event, 0, sizeof(struct tb_event));
 
     // try to extract event from input buffer, return on success
     event->type = TB_EVENT_KEY;
@@ -1411,25 +1385,24 @@ static int wait_fill_event(struct tb_event* event, struct timeval* timeout)
         return event->type;
     }
 
-    // no stuff in FILE's internal buffer, block in select
     while (1)
     {
-            char_buf = getchar();
-            char_buf_len = 1;
-            event->type = TB_EVENT_KEY;
+        char_buf = getchar();
+        char_buf_len = 1;
+        event->type = TB_EVENT_KEY;
 
-            // if there is no free space in input buffer, return error
-            if (ringbuffer_free_space(&inbuf) < char_buf_len)
-            {
-                return -1;
-            }
+        // if there is no free space in input buffer, return error
+        if (ringbuffer_free_space(&inbuf) < char_buf_len)
+        {
+            return -1;
+        }
 
-            // fill buffer
-            ringbuffer_push(&inbuf, &char_buf, char_buf_len);
+        // fill buffer
+        ringbuffer_push(&inbuf, &char_buf, char_buf_len);
 
-            if (extract_event(event, &inbuf, inputmode))
-            {
-                return event->type;
-            }
+        if (extract_event(event, &inbuf, inputmode))
+        {
+            return event->type;
+        }
     }
 }

@@ -125,13 +125,8 @@ static int paint(int argv, char** argc)
 {
     (void)argc;
     (void)argv;
-    int code = tb_init();
 
-    if (code < 0)
-    {
-        fprintf(stderr, "termbox init failed, code: %d\n", code);
-        return -1;
-    }
+    tb_init();
 
     tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
     int w = tb_width();

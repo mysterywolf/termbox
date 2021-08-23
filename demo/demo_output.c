@@ -118,14 +118,8 @@ static int output(int argc, char** argv)
 {
     (void)argc;
     (void)argv;
-    int ret = tb_init();
 
-    if (ret)
-    {
-        fprintf(stderr, "tb_init() failed with error code %d\n", ret);
-        return 1;
-    }
-
+    tb_init();
     draw_all();
 
     //can not use tb_poll_event!!!

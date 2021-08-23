@@ -12,184 +12,184 @@ struct key
 };
 
 #define STOP {0,0,0}
-struct key K_ESC[] = {{1, 1, 'E'}, {2, 1, 'S'}, {3, 1, 'C'}, STOP};
-struct key K_F1[] = {{6, 1, 'F'}, {7, 1, '1'}, STOP};
-struct key K_F2[] = {{9, 1, 'F'}, {10, 1, '2'}, STOP};
-struct key K_F3[] = {{12, 1, 'F'}, {13, 1, '3'}, STOP};
-struct key K_F4[] = {{15, 1, 'F'}, {16, 1, '4'}, STOP};
-struct key K_F5[] = {{19, 1, 'F'}, {20, 1, '5'}, STOP};
-struct key K_F6[] = {{22, 1, 'F'}, {23, 1, '6'}, STOP};
-struct key K_F7[] = {{25, 1, 'F'}, {26, 1, '7'}, STOP};
-struct key K_F8[] = {{28, 1, 'F'}, {29, 1, '8'}, STOP};
-struct key K_F9[] = {{33, 1, 'F'}, {34, 1, '9'}, STOP};
-struct key K_F10[] = {{36, 1, 'F'}, {37, 1, '1'}, {38, 1, '0'}, STOP};
-struct key K_F11[] = {{40, 1, 'F'}, {41, 1, '1'}, {42, 1, '1'}, STOP};
-struct key K_F12[] = {{44, 1, 'F'}, {45, 1, '1'}, {46, 1, '2'}, STOP};
-struct key K_PRN[] = {{50, 1, 'P'}, {51, 1, 'R'}, {52, 1, 'N'}, STOP};
-struct key K_SCR[] = {{54, 1, 'S'}, {55, 1, 'C'}, {56, 1, 'R'}, STOP};
-struct key K_BRK[] = {{58, 1, 'B'}, {59, 1, 'R'}, {60, 1, 'K'}, STOP};
-struct key K_LED1[] = {{66, 1, '-'}, STOP};
-struct key K_LED2[] = {{70, 1, '-'}, STOP};
-struct key K_LED3[] = {{74, 1, '-'}, STOP};
+static struct key K_ESC[] = {{1, 1, 'E'}, {2, 1, 'S'}, {3, 1, 'C'}, STOP};
+static struct key K_F1[] = {{6, 1, 'F'}, {7, 1, '1'}, STOP};
+static struct key K_F2[] = {{9, 1, 'F'}, {10, 1, '2'}, STOP};
+static struct key K_F3[] = {{12, 1, 'F'}, {13, 1, '3'}, STOP};
+static struct key K_F4[] = {{15, 1, 'F'}, {16, 1, '4'}, STOP};
+static struct key K_F5[] = {{19, 1, 'F'}, {20, 1, '5'}, STOP};
+static struct key K_F6[] = {{22, 1, 'F'}, {23, 1, '6'}, STOP};
+static struct key K_F7[] = {{25, 1, 'F'}, {26, 1, '7'}, STOP};
+static struct key K_F8[] = {{28, 1, 'F'}, {29, 1, '8'}, STOP};
+static struct key K_F9[] = {{33, 1, 'F'}, {34, 1, '9'}, STOP};
+static struct key K_F10[] = {{36, 1, 'F'}, {37, 1, '1'}, {38, 1, '0'}, STOP};
+static struct key K_F11[] = {{40, 1, 'F'}, {41, 1, '1'}, {42, 1, '1'}, STOP};
+static struct key K_F12[] = {{44, 1, 'F'}, {45, 1, '1'}, {46, 1, '2'}, STOP};
+static struct key K_PRN[] = {{50, 1, 'P'}, {51, 1, 'R'}, {52, 1, 'N'}, STOP};
+static struct key K_SCR[] = {{54, 1, 'S'}, {55, 1, 'C'}, {56, 1, 'R'}, STOP};
+static struct key K_BRK[] = {{58, 1, 'B'}, {59, 1, 'R'}, {60, 1, 'K'}, STOP};
+static struct key K_LED1[] = {{66, 1, '-'}, STOP};
+static struct key K_LED2[] = {{70, 1, '-'}, STOP};
+static struct key K_LED3[] = {{74, 1, '-'}, STOP};
 
-struct key K_TILDE[] = {{1, 4, '`'}, STOP};
-struct key K_TILDE_SHIFT[] = {{1, 4, '~'}, STOP};
-struct key K_1[] = {{4, 4, '1'}, STOP};
-struct key K_1_SHIFT[] = {{4, 4, '!'}, STOP};
-struct key K_2[] = {{7, 4, '2'}, STOP};
-struct key K_2_SHIFT[] = {{7, 4, '@'}, STOP};
-struct key K_3[] = {{10, 4, '3'}, STOP};
-struct key K_3_SHIFT[] = {{10, 4, '#'}, STOP};
-struct key K_4[] = {{13, 4, '4'}, STOP};
-struct key K_4_SHIFT[] = {{13, 4, '$'}, STOP};
-struct key K_5[] = {{16, 4, '5'}, STOP};
-struct key K_5_SHIFT[] = {{16, 4, '%'}, STOP};
-struct key K_6[] = {{19, 4, '6'}, STOP};
-struct key K_6_SHIFT[] = {{19, 4, '^'}, STOP};
-struct key K_7[] = {{22, 4, '7'}, STOP};
-struct key K_7_SHIFT[] = {{22, 4, '&'}, STOP};
-struct key K_8[] = {{25, 4, '8'}, STOP};
-struct key K_8_SHIFT[] = {{25, 4, '*'}, STOP};
-struct key K_9[] = {{28, 4, '9'}, STOP};
-struct key K_9_SHIFT[] = {{28, 4, '('}, STOP};
-struct key K_0[] = {{31, 4, '0'}, STOP};
-struct key K_0_SHIFT[] = {{31, 4, ')'}, STOP};
-struct key K_MINUS[] = {{34, 4, '-'}, STOP};
-struct key K_MINUS_SHIFT[] = {{34, 4, '_'}, STOP};
-struct key K_EQUALS[] = {{37, 4, '='}, STOP};
-struct key K_EQUALS_SHIFT[] = {{37, 4, '+'}, STOP};
-struct key K_BACKSLASH[] = {{40, 4, '\\'}, STOP};
-struct key K_BACKSLASH_SHIFT[] = {{40, 4, '|'}, STOP};
-struct key K_BACKSPACE[] = {{44, 4, 0x2190}, {45, 4, 0x2500}, {46, 4, 0x2500}, STOP};
-struct key K_INS[] = {{50, 4, 'I'}, {51, 4, 'N'}, {52, 4, 'S'}, STOP};
-struct key K_HOM[] = {{54, 4, 'H'}, {55, 4, 'O'}, {56, 4, 'M'}, STOP};
-struct key K_PGU[] = {{58, 4, 'P'}, {59, 4, 'G'}, {60, 4, 'U'}, STOP};
-struct key K_K_NUMLOCK[] = {{65, 4, 'N'}, STOP};
-struct key K_K_SLASH[] = {{68, 4, '/'}, STOP};
-struct key K_K_STAR[] = {{71, 4, '*'}, STOP};
-struct key K_K_MINUS[] = {{74, 4, '-'}, STOP};
+static struct key K_TILDE[] = {{1, 4, '`'}, STOP};
+static struct key K_TILDE_SHIFT[] = {{1, 4, '~'}, STOP};
+static struct key K_1[] = {{4, 4, '1'}, STOP};
+static struct key K_1_SHIFT[] = {{4, 4, '!'}, STOP};
+static struct key K_2[] = {{7, 4, '2'}, STOP};
+static struct key K_2_SHIFT[] = {{7, 4, '@'}, STOP};
+static struct key K_3[] = {{10, 4, '3'}, STOP};
+static struct key K_3_SHIFT[] = {{10, 4, '#'}, STOP};
+static struct key K_4[] = {{13, 4, '4'}, STOP};
+static struct key K_4_SHIFT[] = {{13, 4, '$'}, STOP};
+static struct key K_5[] = {{16, 4, '5'}, STOP};
+static struct key K_5_SHIFT[] = {{16, 4, '%'}, STOP};
+static struct key K_6[] = {{19, 4, '6'}, STOP};
+static struct key K_6_SHIFT[] = {{19, 4, '^'}, STOP};
+static struct key K_7[] = {{22, 4, '7'}, STOP};
+static struct key K_7_SHIFT[] = {{22, 4, '&'}, STOP};
+static struct key K_8[] = {{25, 4, '8'}, STOP};
+static struct key K_8_SHIFT[] = {{25, 4, '*'}, STOP};
+static struct key K_9[] = {{28, 4, '9'}, STOP};
+static struct key K_9_SHIFT[] = {{28, 4, '('}, STOP};
+static struct key K_0[] = {{31, 4, '0'}, STOP};
+static struct key K_0_SHIFT[] = {{31, 4, ')'}, STOP};
+static struct key K_MINUS[] = {{34, 4, '-'}, STOP};
+static struct key K_MINUS_SHIFT[] = {{34, 4, '_'}, STOP};
+static struct key K_EQUALS[] = {{37, 4, '='}, STOP};
+static struct key K_EQUALS_SHIFT[] = {{37, 4, '+'}, STOP};
+static struct key K_BACKSLASH[] = {{40, 4, '\\'}, STOP};
+static struct key K_BACKSLASH_SHIFT[] = {{40, 4, '|'}, STOP};
+static struct key K_BACKSPACE[] = {{44, 4, 0x2190}, {45, 4, 0x2500}, {46, 4, 0x2500}, STOP};
+static struct key K_INS[] = {{50, 4, 'I'}, {51, 4, 'N'}, {52, 4, 'S'}, STOP};
+static struct key K_HOM[] = {{54, 4, 'H'}, {55, 4, 'O'}, {56, 4, 'M'}, STOP};
+static struct key K_PGU[] = {{58, 4, 'P'}, {59, 4, 'G'}, {60, 4, 'U'}, STOP};
+static struct key K_K_NUMLOCK[] = {{65, 4, 'N'}, STOP};
+static struct key K_K_SLASH[] = {{68, 4, '/'}, STOP};
+static struct key K_K_STAR[] = {{71, 4, '*'}, STOP};
+static struct key K_K_MINUS[] = {{74, 4, '-'}, STOP};
 
-struct key K_TAB[] = {{1, 6, 'T'}, {2, 6, 'A'}, {3, 6, 'B'}, STOP};
-struct key K_q[] = {{6, 6, 'q'}, STOP};
-struct key K_Q[] = {{6, 6, 'Q'}, STOP};
-struct key K_w[] = {{9, 6, 'w'}, STOP};
-struct key K_W[] = {{9, 6, 'W'}, STOP};
-struct key K_e[] = {{12, 6, 'e'}, STOP};
-struct key K_E[] = {{12, 6, 'E'}, STOP};
-struct key K_r[] = {{15, 6, 'r'}, STOP};
-struct key K_R[] = {{15, 6, 'R'}, STOP};
-struct key K_t[] = {{18, 6, 't'}, STOP};
-struct key K_T[] = {{18, 6, 'T'}, STOP};
-struct key K_y[] = {{21, 6, 'y'}, STOP};
-struct key K_Y[] = {{21, 6, 'Y'}, STOP};
-struct key K_u[] = {{24, 6, 'u'}, STOP};
-struct key K_U[] = {{24, 6, 'U'}, STOP};
-struct key K_i[] = {{27, 6, 'i'}, STOP};
-struct key K_I[] = {{27, 6, 'I'}, STOP};
-struct key K_o[] = {{30, 6, 'o'}, STOP};
-struct key K_O[] = {{30, 6, 'O'}, STOP};
-struct key K_p[] = {{33, 6, 'p'}, STOP};
-struct key K_P[] = {{33, 6, 'P'}, STOP};
-struct key K_LSQB[] = {{36, 6, '['}, STOP};
-struct key K_LCUB[] = {{36, 6, '{'}, STOP};
-struct key K_RSQB[] = {{39, 6, ']'}, STOP};
-struct key K_RCUB[] = {{39, 6, '}'}, STOP};
-struct key K_ENTER[] =
+static struct key K_TAB[] = {{1, 6, 'T'}, {2, 6, 'A'}, {3, 6, 'B'}, STOP};
+static struct key K_q[] = {{6, 6, 'q'}, STOP};
+static struct key K_Q[] = {{6, 6, 'Q'}, STOP};
+static struct key K_w[] = {{9, 6, 'w'}, STOP};
+static struct key K_W[] = {{9, 6, 'W'}, STOP};
+static struct key K_e[] = {{12, 6, 'e'}, STOP};
+static struct key K_E[] = {{12, 6, 'E'}, STOP};
+static struct key K_r[] = {{15, 6, 'r'}, STOP};
+static struct key K_R[] = {{15, 6, 'R'}, STOP};
+static struct key K_t[] = {{18, 6, 't'}, STOP};
+static struct key K_T[] = {{18, 6, 'T'}, STOP};
+static struct key K_y[] = {{21, 6, 'y'}, STOP};
+static struct key K_Y[] = {{21, 6, 'Y'}, STOP};
+static struct key K_u[] = {{24, 6, 'u'}, STOP};
+static struct key K_U[] = {{24, 6, 'U'}, STOP};
+static struct key K_i[] = {{27, 6, 'i'}, STOP};
+static struct key K_I[] = {{27, 6, 'I'}, STOP};
+static struct key K_o[] = {{30, 6, 'o'}, STOP};
+static struct key K_O[] = {{30, 6, 'O'}, STOP};
+static struct key K_p[] = {{33, 6, 'p'}, STOP};
+static struct key K_P[] = {{33, 6, 'P'}, STOP};
+static struct key K_LSQB[] = {{36, 6, '['}, STOP};
+static struct key K_LCUB[] = {{36, 6, '{'}, STOP};
+static struct key K_RSQB[] = {{39, 6, ']'}, STOP};
+static struct key K_RCUB[] = {{39, 6, '}'}, STOP};
+static struct key K_ENTER[] =
 {
     {43, 6, 0x2591}, {44, 6, 0x2591}, {45, 6, 0x2591}, {46, 6, 0x2591},
     {43, 7, 0x2591}, {44, 7, 0x2591}, {45, 7, 0x21B5}, {46, 7, 0x2591},
     {41, 8, 0x2591}, {42, 8, 0x2591}, {43, 8, 0x2591}, {44, 8, 0x2591},
     {45, 8, 0x2591}, {46, 8, 0x2591}, STOP
 };
-struct key K_DEL[] = {{50, 6, 'D'}, {51, 6, 'E'}, {52, 6, 'L'}, STOP};
-struct key K_END[] = {{54, 6, 'E'}, {55, 6, 'N'}, {56, 6, 'D'}, STOP};
-struct key K_PGD[] = {{58, 6, 'P'}, {59, 6, 'G'}, {60, 6, 'D'}, STOP};
-struct key K_K_7[] = {{65, 6, '7'}, STOP};
-struct key K_K_8[] = {{68, 6, '8'}, STOP};
-struct key K_K_9[] = {{71, 6, '9'}, STOP};
-struct key K_K_PLUS[] = {{74, 6, ' '}, {74, 7, '+'}, {74, 8, ' '}, STOP};
+static struct key K_DEL[] = {{50, 6, 'D'}, {51, 6, 'E'}, {52, 6, 'L'}, STOP};
+static struct key K_END[] = {{54, 6, 'E'}, {55, 6, 'N'}, {56, 6, 'D'}, STOP};
+static struct key K_PGD[] = {{58, 6, 'P'}, {59, 6, 'G'}, {60, 6, 'D'}, STOP};
+static struct key K_K_7[] = {{65, 6, '7'}, STOP};
+static struct key K_K_8[] = {{68, 6, '8'}, STOP};
+static struct key K_K_9[] = {{71, 6, '9'}, STOP};
+static struct key K_K_PLUS[] = {{74, 6, ' '}, {74, 7, '+'}, {74, 8, ' '}, STOP};
 
-struct key K_CAPS[] = {{1, 8, 'C'}, {2, 8, 'A'}, {3, 8, 'P'}, {4, 8, 'S'}, STOP};
-struct key K_a[] = {{7, 8, 'a'}, STOP};
-struct key K_A[] = {{7, 8, 'A'}, STOP};
-struct key K_s[] = {{10, 8, 's'}, STOP};
-struct key K_S[] = {{10, 8, 'S'}, STOP};
-struct key K_d[] = {{13, 8, 'd'}, STOP};
-struct key K_D[] = {{13, 8, 'D'}, STOP};
-struct key K_f[] = {{16, 8, 'f'}, STOP};
-struct key K_F[] = {{16, 8, 'F'}, STOP};
-struct key K_g[] = {{19, 8, 'g'}, STOP};
-struct key K_G[] = {{19, 8, 'G'}, STOP};
-struct key K_h[] = {{22, 8, 'h'}, STOP};
-struct key K_H[] = {{22, 8, 'H'}, STOP};
-struct key K_j[] = {{25, 8, 'j'}, STOP};
-struct key K_J[] = {{25, 8, 'J'}, STOP};
-struct key K_k[] = {{28, 8, 'k'}, STOP};
-struct key K_K[] = {{28, 8, 'K'}, STOP};
-struct key K_l[] = {{31, 8, 'l'}, STOP};
-struct key K_L[] = {{31, 8, 'L'}, STOP};
-struct key K_SEMICOLON[] = {{34, 8, ';'}, STOP};
-struct key K_PARENTHESIS[] = {{34, 8, ':'}, STOP};
-struct key K_QUOTE[] = {{37, 8, '\''}, STOP};
-struct key K_DOUBLEQUOTE[] = {{37, 8, '"'}, STOP};
-struct key K_K_4[] = {{65, 8, '4'}, STOP};
-struct key K_K_5[] = {{68, 8, '5'}, STOP};
-struct key K_K_6[] = {{71, 8, '6'}, STOP};
+static struct key K_CAPS[] = {{1, 8, 'C'}, {2, 8, 'A'}, {3, 8, 'P'}, {4, 8, 'S'}, STOP};
+static struct key K_a[] = {{7, 8, 'a'}, STOP};
+static struct key K_A[] = {{7, 8, 'A'}, STOP};
+static struct key K_s[] = {{10, 8, 's'}, STOP};
+static struct key K_S[] = {{10, 8, 'S'}, STOP};
+static struct key K_d[] = {{13, 8, 'd'}, STOP};
+static struct key K_D[] = {{13, 8, 'D'}, STOP};
+static struct key K_f[] = {{16, 8, 'f'}, STOP};
+static struct key K_F[] = {{16, 8, 'F'}, STOP};
+static struct key K_g[] = {{19, 8, 'g'}, STOP};
+static struct key K_G[] = {{19, 8, 'G'}, STOP};
+static struct key K_h[] = {{22, 8, 'h'}, STOP};
+static struct key K_H[] = {{22, 8, 'H'}, STOP};
+static struct key K_j[] = {{25, 8, 'j'}, STOP};
+static struct key K_J[] = {{25, 8, 'J'}, STOP};
+static struct key K_k[] = {{28, 8, 'k'}, STOP};
+static struct key K_K[] = {{28, 8, 'K'}, STOP};
+static struct key K_l[] = {{31, 8, 'l'}, STOP};
+static struct key K_L[] = {{31, 8, 'L'}, STOP};
+static struct key K_SEMICOLON[] = {{34, 8, ';'}, STOP};
+static struct key K_PARENTHESIS[] = {{34, 8, ':'}, STOP};
+static struct key K_QUOTE[] = {{37, 8, '\''}, STOP};
+static struct key K_DOUBLEQUOTE[] = {{37, 8, '"'}, STOP};
+static struct key K_K_4[] = {{65, 8, '4'}, STOP};
+static struct key K_K_5[] = {{68, 8, '5'}, STOP};
+static struct key K_K_6[] = {{71, 8, '6'}, STOP};
 
-struct key K_LSHIFT[] = {{1, 10, 'S'}, {2, 10, 'H'}, {3, 10, 'I'}, {4, 10, 'F'}, {5, 10, 'T'}, STOP};
-struct key K_z[] = {{9, 10, 'z'}, STOP};
-struct key K_Z[] = {{9, 10, 'Z'}, STOP};
-struct key K_x[] = {{12, 10, 'x'}, STOP};
-struct key K_X[] = {{12, 10, 'X'}, STOP};
-struct key K_c[] = {{15, 10, 'c'}, STOP};
-struct key K_C[] = {{15, 10, 'C'}, STOP};
-struct key K_v[] = {{18, 10, 'v'}, STOP};
-struct key K_V[] = {{18, 10, 'V'}, STOP};
-struct key K_b[] = {{21, 10, 'b'}, STOP};
-struct key K_B[] = {{21, 10, 'B'}, STOP};
-struct key K_n[] = {{24, 10, 'n'}, STOP};
-struct key K_N[] = {{24, 10, 'N'}, STOP};
-struct key K_m[] = {{27, 10, 'm'}, STOP};
-struct key K_M[] = {{27, 10, 'M'}, STOP};
-struct key K_COMMA[] = {{30, 10, ','}, STOP};
-struct key K_LANB[] = {{30, 10, '<'}, STOP};
-struct key K_PERIOD[] = {{33, 10, '.'}, STOP};
-struct key K_RANB[] = {{33, 10, '>'}, STOP};
-struct key K_SLASH[] = {{36, 10, '/'}, STOP};
-struct key K_QUESTION[] = {{36, 10, '?'}, STOP};
-struct key K_RSHIFT[] = {{42, 10, 'S'}, {43, 10, 'H'}, {44, 10, 'I'}, {45, 10, 'F'}, {46, 10, 'T'}, STOP};
-struct key K_ARROW_UP[] = {{54, 10, '('}, {55, 10, 0x2191}, {56, 10, ')'}, STOP};
-struct key K_K_1[] = {{65, 10, '1'}, STOP};
-struct key K_K_2[] = {{68, 10, '2'}, STOP};
-struct key K_K_3[] = {{71, 10, '3'}, STOP};
-struct key K_K_ENTER[] = {{74, 10, 0x2591}, {74, 11, 0x2591}, {74, 12, 0x2591}, STOP};
+static struct key K_LSHIFT[] = {{1, 10, 'S'}, {2, 10, 'H'}, {3, 10, 'I'}, {4, 10, 'F'}, {5, 10, 'T'}, STOP};
+static struct key K_z[] = {{9, 10, 'z'}, STOP};
+static struct key K_Z[] = {{9, 10, 'Z'}, STOP};
+static struct key K_x[] = {{12, 10, 'x'}, STOP};
+static struct key K_X[] = {{12, 10, 'X'}, STOP};
+static struct key K_c[] = {{15, 10, 'c'}, STOP};
+static struct key K_C[] = {{15, 10, 'C'}, STOP};
+static struct key K_v[] = {{18, 10, 'v'}, STOP};
+static struct key K_V[] = {{18, 10, 'V'}, STOP};
+static struct key K_b[] = {{21, 10, 'b'}, STOP};
+static struct key K_B[] = {{21, 10, 'B'}, STOP};
+static struct key K_n[] = {{24, 10, 'n'}, STOP};
+static struct key K_N[] = {{24, 10, 'N'}, STOP};
+static struct key K_m[] = {{27, 10, 'm'}, STOP};
+static struct key K_M[] = {{27, 10, 'M'}, STOP};
+static struct key K_COMMA[] = {{30, 10, ','}, STOP};
+static struct key K_LANB[] = {{30, 10, '<'}, STOP};
+static struct key K_PERIOD[] = {{33, 10, '.'}, STOP};
+static struct key K_RANB[] = {{33, 10, '>'}, STOP};
+static struct key K_SLASH[] = {{36, 10, '/'}, STOP};
+static struct key K_QUESTION[] = {{36, 10, '?'}, STOP};
+static struct key K_RSHIFT[] = {{42, 10, 'S'}, {43, 10, 'H'}, {44, 10, 'I'}, {45, 10, 'F'}, {46, 10, 'T'}, STOP};
+static struct key K_ARROW_UP[] = {{54, 10, '('}, {55, 10, 0x2191}, {56, 10, ')'}, STOP};
+static struct key K_K_1[] = {{65, 10, '1'}, STOP};
+static struct key K_K_2[] = {{68, 10, '2'}, STOP};
+static struct key K_K_3[] = {{71, 10, '3'}, STOP};
+static struct key K_K_ENTER[] = {{74, 10, 0x2591}, {74, 11, 0x2591}, {74, 12, 0x2591}, STOP};
 
-struct key K_LCTRL[] = {{1, 12, 'C'}, {2, 12, 'T'}, {3, 12, 'R'}, {4, 12, 'L'}, STOP};
-struct key K_LWIN[] = {{6, 12, 'W'}, {7, 12, 'I'}, {8, 12, 'N'}, STOP};
-struct key K_LALT[] = {{10, 12, 'A'}, {11, 12, 'L'}, {12, 12, 'T'}, STOP};
-struct key K_SPACE[] =
+static struct key K_LCTRL[] = {{1, 12, 'C'}, {2, 12, 'T'}, {3, 12, 'R'}, {4, 12, 'L'}, STOP};
+static struct key K_LWIN[] = {{6, 12, 'W'}, {7, 12, 'I'}, {8, 12, 'N'}, STOP};
+static struct key K_LALT[] = {{10, 12, 'A'}, {11, 12, 'L'}, {12, 12, 'T'}, STOP};
+static struct key K_SPACE[] =
 {
     {14, 12, ' '}, {15, 12, ' '}, {16, 12, ' '}, {17, 12, ' '}, {18, 12, ' '},
     {19, 12, 'S'}, {20, 12, 'P'}, {21, 12, 'A'}, {22, 12, 'C'}, {23, 12, 'E'},
     {24, 12, ' '}, {25, 12, ' '}, {26, 12, ' '}, {27, 12, ' '}, {28, 12, ' '},
     STOP
 };
-struct key K_RALT[] = {{30, 12, 'A'}, {31, 12, 'L'}, {32, 12, 'T'}, STOP};
-struct key K_RWIN[] = {{34, 12, 'W'}, {35, 12, 'I'}, {36, 12, 'N'}, STOP};
-struct key K_RPROP[] = {{38, 12, 'P'}, {39, 12, 'R'}, {40, 12, 'O'}, {41, 12, 'P'}, STOP};
-struct key K_RCTRL[] = {{43, 12, 'C'}, {44, 12, 'T'}, {45, 12, 'R'}, {46, 12, 'L'}, STOP};
-struct key K_ARROW_LEFT[] = {{50, 12, '('}, {51, 12, 0x2190}, {52, 12, ')'}, STOP};
-struct key K_ARROW_DOWN[] = {{54, 12, '('}, {55, 12, 0x2193}, {56, 12, ')'}, STOP};
-struct key K_ARROW_RIGHT[] = {{58, 12, '('}, {59, 12, 0x2192}, {60, 12, ')'}, STOP};
-struct key K_K_0[] = {{65, 12, ' '}, {66, 12, '0'}, {67, 12, ' '}, {68, 12, ' '}, STOP};
-struct key K_K_PERIOD[] = {{71, 12, '.'}, STOP};
+static struct key K_RALT[] = {{30, 12, 'A'}, {31, 12, 'L'}, {32, 12, 'T'}, STOP};
+static struct key K_RWIN[] = {{34, 12, 'W'}, {35, 12, 'I'}, {36, 12, 'N'}, STOP};
+static struct key K_RPROP[] = {{38, 12, 'P'}, {39, 12, 'R'}, {40, 12, 'O'}, {41, 12, 'P'}, STOP};
+static struct key K_RCTRL[] = {{43, 12, 'C'}, {44, 12, 'T'}, {45, 12, 'R'}, {46, 12, 'L'}, STOP};
+static struct key K_ARROW_LEFT[] = {{50, 12, '('}, {51, 12, 0x2190}, {52, 12, ')'}, STOP};
+static struct key K_ARROW_DOWN[] = {{54, 12, '('}, {55, 12, 0x2193}, {56, 12, ')'}, STOP};
+static struct key K_ARROW_RIGHT[] = {{58, 12, '('}, {59, 12, 0x2192}, {60, 12, ')'}, STOP};
+static struct key K_K_0[] = {{65, 12, ' '}, {66, 12, '0'}, {67, 12, ' '}, {68, 12, ' '}, STOP};
+static struct key K_K_PERIOD[] = {{71, 12, '.'}, STOP};
 
 struct combo
 {
     struct key* keys[6];
 };
 
-struct combo combos[] =
+static struct combo combos[] =
 {
     {{K_TILDE, K_2, K_LCTRL, K_RCTRL, 0}},
     {{K_A, K_LCTRL, K_RCTRL, 0}},
@@ -321,7 +321,7 @@ struct combo combos[] =
     {{K_8, K_BACKSPACE, K_LCTRL, K_RCTRL, 0}}
 };
 
-struct combo func_combos[] =
+static struct combo func_combos[] =
 {
     {{K_F1, 0}},
     {{K_F2, 0}},
@@ -347,7 +347,7 @@ struct combo func_combos[] =
     {{K_ARROW_RIGHT, 0}}
 };
 
-void print_tb(const char* str, int x, int y, uint32_t fg, uint32_t bg)
+static void print_tb(const char* str, int x, int y, uint32_t fg, uint32_t bg)
 {
     while (*str)
     {
@@ -358,7 +358,7 @@ void print_tb(const char* str, int x, int y, uint32_t fg, uint32_t bg)
     }
 }
 
-void printf_tb(int x, int y, uint32_t fg, uint32_t bg, const char* fmt, ...)
+static void printf_tb(int x, int y, uint32_t fg, uint32_t bg, const char* fmt, ...)
 {
     char buf[4096];
     va_list vl;
@@ -368,7 +368,7 @@ void printf_tb(int x, int y, uint32_t fg, uint32_t bg, const char* fmt, ...)
     print_tb(buf, x, y, fg, bg);
 }
 
-void draw_key(struct key* k, uint32_t fg, uint32_t bg)
+static void draw_key(struct key* k, uint32_t fg, uint32_t bg)
 {
     while (k->x)
     {
@@ -377,7 +377,7 @@ void draw_key(struct key* k, uint32_t fg, uint32_t bg)
     }
 }
 
-void draw_keyboard()
+static void draw_keyboard()
 {
     int i;
     tb_change_cell(0, 0, 0x250C, TB_WHITE, TB_DEFAULT);
@@ -550,7 +550,7 @@ void draw_keyboard()
     printf_tb(3, 18, TB_WHITE, TB_DEFAULT, "Input mode: %s", inputmode_str);
 }
 
-const char* funckeymap(int k)
+static const char* funckeymap(int k)
 {
     static const char* fcmap[] =
     {
@@ -630,7 +630,7 @@ const char* funckeymap(int k)
     return "UNKNOWN";
 }
 
-void pretty_print_press(struct tb_event* ev)
+static void pretty_print_press(struct tb_event* ev)
 {
     char buf[7];
     buf[utf8_unicode_to_char(buf, ev->ch)] = '\0';
@@ -651,14 +651,9 @@ void pretty_print_press(struct tb_event* ev)
 
 }
 
-void pretty_print_resize(struct tb_event* ev)
-{
-    printf_tb(3, 19, TB_WHITE, TB_DEFAULT, "Resize event: %d x %d", ev->w, ev->h);
-}
+static int counter = 0;
 
-int counter = 0;
-
-void  pretty_print_mouse(struct tb_event* ev)
+static void  pretty_print_mouse(struct tb_event* ev)
 {
     printf_tb(3, 19, TB_WHITE, TB_DEFAULT, "Mouse event: %d x %d", ev->x, ev->y);
     char* btn = "";
@@ -694,7 +689,7 @@ void  pretty_print_mouse(struct tb_event* ev)
     printf_tb(48, 19, TB_YELLOW, TB_DEFAULT, btn, counter);
 }
 
-void dispatch_press(struct tb_event* ev)
+static void dispatch_press(struct tb_event* ev)
 {
     if (ev->mod & TB_MOD_ALT)
     {

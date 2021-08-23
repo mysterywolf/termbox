@@ -31,7 +31,7 @@ static const uint32_t colors[] =
     TB_WHITE,
 };
 
-void updateAndDrawButtons(int* current, int x, int y, int mx, int my, int n,
+static void updateAndDrawButtons(int* current, int x, int y, int mx, int my, int n,
     void (*attrFunc)(int, uint32_t*, uint32_t*, uint32_t*))
 {
     int lx = x;
@@ -77,21 +77,21 @@ void updateAndDrawButtons(int* current, int x, int y, int mx, int my, int n,
     }
 }
 
-void runeAttrFunc(int i, uint32_t* r, uint32_t* fg, uint32_t* bg)
+static void runeAttrFunc(int i, uint32_t* r, uint32_t* fg, uint32_t* bg)
 {
     *r = runes[i];
     *fg = TB_DEFAULT;
     *bg = TB_DEFAULT;
 }
 
-void colorAttrFunc(int i, uint32_t* r, uint32_t* fg, uint32_t* bg)
+static void colorAttrFunc(int i, uint32_t* r, uint32_t* fg, uint32_t* bg)
 {
     *r = ' ';
     *fg = TB_DEFAULT;
     *bg = colors[i];
 }
 
-void updateAndRedrawAll(int mx, int my)
+static void updateAndRedrawAll(int mx, int my)
 {
     tb_clear();
 
@@ -108,7 +108,7 @@ void updateAndRedrawAll(int mx, int my)
     tb_present();
 }
 
-void reallocBackBuffer(int w, int h)
+static void reallocBackBuffer(int w, int h)
 {
     bbw = w;
     bbh = h;

@@ -9,7 +9,6 @@
 #include <sys/select.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
-//#include <termios.h>
 #include <unistd.h>
 #include <wchar.h>
 #include <wcwidth.h>
@@ -775,27 +774,12 @@ static int wait_fill_event(struct tb_event* event, struct timeval* timeout);
 // may happen in a different thread
 static volatile int buffer_size_change_request;
 
-static int tb_init_file(void)
+int tb_init(void)
 {
     if (init_term() < 0)
     {
         return TB_EUNSUPPORTED_TERMINAL;
     }
-
-//    tcgetattr(out_fileno, &orig_tios);
-
-//    struct termios tios;
-
-//    memcpy(&tios, &orig_tios, sizeof(tios));
-//    tios.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP
-//            | INLCR | IGNCR | ICRNL | IXON);
-//    tios.c_oflag &= ~OPOST;
-//    tios.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-//    tios.c_cflag &= ~(CSIZE | PARENB);
-//    tios.c_cflag |= CS8;
-//    tios.c_cc[VMIN] = 0;
-//    tios.c_cc[VTIME] = 0;
-//    tcsetattr(out_fileno, TCSAFLUSH, &tios);
 
     memstream_init(&write_buffer, STDOUT_FILENO, write_buffer_data,
         sizeof(write_buffer_data));
@@ -810,12 +794,8 @@ static int tb_init_file(void)
     cellbuf_clear(&back_buffer);
     cellbuf_clear(&front_buffer);
     init_ringbuffer(&inbuf, 4096);
-    return 0;
-}
 
-int tb_init(void)
-{
-    return tb_init_file();
+    return 0;
 }
 
 void tb_shutdown(void)
@@ -833,7 +813,6 @@ void tb_shutdown(void)
     memstream_puts(&write_buffer, funcs[T_EXIT_KEYPAD]);
     memstream_puts(&write_buffer, funcs[T_EXIT_MOUSE]);
     memstream_flush(&write_buffer);
-//    tcsetattr(out_fileno, TCSAFLUSH, &orig_tios);
 
     cellbuf_free(&back_buffer);
     cellbuf_free(&front_buffer);
@@ -1419,6 +1398,8 @@ static int wait_fill_event(struct tb_event* event, struct timeval* timeout)
 {
     size_t char_buf_len;
     char char_buf;
+
+    (void) timeout; //discarded
 
     memset(event, 0, sizeof(struct tb_event));
 

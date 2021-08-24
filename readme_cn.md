@@ -40,7 +40,7 @@ Termbox的原生内置绘制方案非常的少，只有3个，仅支持最基本
 
 #### int tb_peek_event(struct tb_event* event, int timeout)
 
-此函数已经被移除，不支持超时等待，请使用`tb_poll_event()`函数代替。
+此函数不再具备超时功能，其行为与`tb_poll_event()`函数一致。
 
 
 

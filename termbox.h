@@ -285,8 +285,8 @@ int tb_select_output_mode(int mode);
 // event (one of TB_EVENT_* constants) or -1 if there was an error or 0 in case
 // there were no event during 'timeout' period.
 // timeout have been discarded. This function will always wait forever.
-// Thus, this function is as same as tb_poll_event. It has been removed.
-// int tb_peek_event(struct tb_event* event, int timeout);
+// Thus, this function is as same as tb_poll_event.
+int tb_peek_event(struct tb_event* event, int timeout);
 
 // Wait for an event forever and fill the 'event' structure with it, when the
 // event is available. Returns the type of the event (one of TB_EVENT_

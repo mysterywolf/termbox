@@ -986,6 +986,11 @@ int tb_poll_event(struct tb_event* event)
     return wait_fill_event(event, RT_NULL);
 }
 
+int tb_peek_event(struct tb_event* event, int timeout)
+{
+    return tb_poll_event(event);
+}
+
 int tb_width(void)
 {
     return termw;

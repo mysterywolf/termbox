@@ -1220,8 +1220,8 @@ static void update_term_size(void)
 
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &sz);
 
-    termw = sz.ws_col;
-    termh = sz.ws_row;
+    termw = sz.ws_col > 0 ? sz.ws_col : 80;
+    termh = sz.ws_row > 0 ? sz.ws_row : 24;
 }
 
 static void send_attr(uint32_t fg, uint32_t bg)

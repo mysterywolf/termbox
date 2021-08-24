@@ -1,5 +1,7 @@
 # Termbox for RT-Thread 中文说明文档
 
+## 欢迎提交PR进行补充
+
 
 
 ## Termbox APIs

@@ -725,7 +725,7 @@ struct cellbuf
 
 static struct cellbuf back_buffer;
 static struct cellbuf front_buffer;
-static unsigned char write_buffer_data[32 * 1024];
+static unsigned char write_buffer_data[1024];
 static struct memstream write_buffer;
 
 static int termw = -1;

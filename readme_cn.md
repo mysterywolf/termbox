@@ -51,7 +51,8 @@ tb_init(); // 初始化termbox
 tb_clear(); //将屏幕清屏
 
 //绘制图案...
-tb_change_cell(0, 0, 0x250C, TB_WHITE, TB_DEFAULT);
+//0x250C 是字符的unicode码，可以填写中文的unicode码来在中断显示中文
+tb_change_cell(0, 0, 0x250C, TB_WHITE, TB_DEFAULT); 
 tb_change_cell(79, 0, 0x2510, TB_WHITE, TB_DEFAULT);
 tb_change_cell(0, 23, 0x2514, TB_WHITE, TB_DEFAULT);
 tb_change_cell(79, 23, 0x2518, TB_WHITE, TB_DEFAULT);

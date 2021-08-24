@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2021, Meco Jianting Man <jiantingman@foxmail.com>
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2021-08-23     Meco Man     port to RT-Thread
+ */
+
 #ifndef H_TERMBOX
 #define H_TERMBOX
 #include <stdint.h>

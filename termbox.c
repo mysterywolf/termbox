@@ -462,7 +462,7 @@ enum
 //     "\033[0;10m", "\033[4m", "\033[1m", "\033[5m", "\033[7m", "", "", "", "",
 // };
 
-xterm
+// xterm
 static const char* xterm_keys[] =
 {
  "\033OP", "\033OQ", "\033OR", "\033OS", "\033[15~", "\033[17~", "\033[18~",
@@ -1466,6 +1466,7 @@ static void update_size(void)
 
 static int wait_fill_event(struct tb_event* event, void* unused)
 {
+    extern char finsh_getchar(void);
     size_t char_buf_len;
     char char_buf;
 
@@ -1473,17 +1474,15 @@ static int wait_fill_event(struct tb_event* event, void* unused)
 
     // try to extract event from input buffer, return on success
     event->type = TB_EVENT_KEY;
-
-    if (extract_event(event, &inbuf, inputmode))
+    if (extract_event(event, &inbuf, inputmode) == RT_TRUE)
     {
         return event->type;
     }
 
     while (1)
     {
-        char_buf = getchar();
+        char_buf = finsh_getchar();
         char_buf_len = 1;
-        event->type = TB_EVENT_KEY;
 
         // if there is no free space in input buffer, return error
         if (ringbuffer_free_space(&inbuf) < char_buf_len)
@@ -1494,7 +1493,8 @@ static int wait_fill_event(struct tb_event* event, void* unused)
         // fill buffer
         ringbuffer_push(&inbuf, &char_buf, char_buf_len);
 
-        if (extract_event(event, &inbuf, inputmode))
+        event->type = TB_EVENT_KEY;
+        if (extract_event(event, &inbuf, inputmode) == RT_TRUE)
         {
             return event->type;
         }

@@ -1470,27 +1470,11 @@ static int wait_fill_event(struct tb_event* event, void* unused)
     size_t char_buf_len;
     char char_buf;
 
-    rt_memset(event, 0, sizeof(struct tb_event));
-
-    // try to extract event from input buffer, return on success
-    event->type = TB_EVENT_KEY;
-    if (extract_event(event, &inbuf, inputmode) == RT_TRUE)
-    {
-        return event->type;
-    }
-
     while (1)
     {
         char_buf = finsh_getchar();
         char_buf_len = 1;
 
-        // if there is no free space in input buffer, return error
-        if (ringbuffer_free_space(&inbuf) < char_buf_len)
-        {
-            return -1;
-        }
-
-        // fill buffer
         ringbuffer_push(&inbuf, &char_buf, char_buf_len);
 
         event->type = TB_EVENT_KEY;

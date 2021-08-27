@@ -40,7 +40,7 @@ Termbox的原生内置绘制方案非常的少，只有3个，仅支持最基本
 
 #### int tb_peek_event(struct tb_event* event, int timeout)
 
-此函数不再具备超时功能，其行为与`tb_poll_event()`函数一致。
+具有超时功能地等待键盘输入事件、鼠标事件或其他事件，单位是ms。
 
 
 

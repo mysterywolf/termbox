@@ -9,6 +9,7 @@
  */
 
 #include <stddef.h>
+#include <limits.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
@@ -848,7 +849,7 @@ static void update_term_size(void);
 static void send_attr(uint32_t fg, uint32_t bg);
 static void send_char(int x, int y, uint32_t c);
 static void send_clear(void);
-static int wait_fill_event(struct tb_event* event, struct timeval *timeout);
+static int wait_fill_event(struct tb_event* event, int timeout);
 
 // may happen in a different thread
 static volatile int buffer_size_change_request;
@@ -1064,12 +1065,12 @@ struct tb_cell* tb_cell_buffer(void)
 
 int tb_poll_event(struct tb_event* event)
 {
-    return wait_fill_event(event, RT_NULL);
+    return wait_fill_event(event, INT_MAX);
 }
 
 int tb_peek_event(struct tb_event* event, int timeout)
 {
-    return tb_poll_event(event);
+    return wait_fill_event(event, timeout);
 }
 
 int tb_width(void)
@@ -1466,7 +1467,7 @@ static void update_size(void)
     send_clear();
 }
 
-static int wait_fill_event(struct tb_event* event, struct timeval *timeout)
+static int wait_fill_event(struct tb_event* event, int timeout)
 {
     char ch_buf[BUFFER_SIZE_MAX];
     struct pollfd poll_fd;
@@ -1486,7 +1487,7 @@ static int wait_fill_event(struct tb_event* event, struct timeval *timeout)
 
     while (1)
     {
-        ret = poll(&poll_fd, 1, 1000000);
+        ret = poll(&poll_fd, 1, timeout);
         if(ret < 0)
         {
             continue; /* poll error */

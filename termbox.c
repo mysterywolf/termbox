@@ -9,7 +9,6 @@
  */
 
 #include <stddef.h>
-#include <limits.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
@@ -1065,7 +1064,7 @@ struct tb_cell* tb_cell_buffer(void)
 
 int tb_poll_event(struct tb_event* event)
 {
-    return wait_fill_event(event, INT_MAX);
+    return wait_fill_event(event, RT_TICK_MAX/2 - 1);
 }
 
 int tb_peek_event(struct tb_event* event, int timeout)

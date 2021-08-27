@@ -27,6 +27,18 @@ See `termbox.h` header file for full detail.
 
 ![termbox-keyboard](demo/termbox-keyboard.png)
 
+
+
+## How to obtain this package
+
+```Kconfig
+ RT-Thread online packages  --->
+    miscellaneous packages  --->
+        [*] termbox: library for writing text-based user interfaces
+```
+
+
+
 ## Contact information
 
 Maintainer: [Meco Man](https://github.com/mysterywolf)

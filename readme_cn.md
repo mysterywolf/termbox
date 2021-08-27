@@ -1,16 +1,50 @@
 # Termbox for RT-Thread 中文说明文档
 
-## 欢迎提交PR进行补充
+## 目前文档不全，只挑重点说，详见'termbox.h'的注释，欢迎提交PR进行补充
+
+Termbox 是在一个Linux下的一个轻量级TUI界面库，使用非常广泛，被封装为Go以及Python等其他语言的库。
+
+现在Termbox也可以在RT-Thread上运行了！Termbox的绘制功能非常简单，大道至简，只提供12个绘制相关的API。但是却有非常强大的输入分析能力，可以分析键盘单键、组合键以及鼠标的点击和滚轮功能，目前这些功能都已经全部可以在RT-Thread上运行。
+
+Termbox的输出字符是采用Unicode编码，即可以支持多语种的绘制，且自动判断字符的宽度。
 
 
 
 ## Termbox APIs
 
+### 基本
+
+#### int tb_init(void)
+
+初始化Termbox。
+
+#### void tb_shutdown(void)
+
+结束Termbox。
+
+#### int tb_width(void)
+
+获取当前终端窗口的宽
+
+#### int tb_height(void)
+
+获取当前终端窗口的高
+
+
+
 ### 属性
 
 #### tb_select_input_mode()
 
-`tb_select_input_mode()`是用来设置输入触发模式的，如果使用PuTTY终端，这个函数没什么用，因为PuTTY不支持接收鼠标的信号，而termbox默认就是`TB_INPUT_ESC`模式，所以这个函数可以不用调用。
+`tb_select_input_mode()`是用来设置输入触发模式的，而termbox默认是`TB_INPUT_ESC`模式。如果想要支持鼠标：
+
+```c
+tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
+```
+
+#### void tb_set_clear_attributes(uint32_t fg, uint32_t bg)
+
+设定或清除字符的前景、背景色。其中`TB_DEFAULT`表示终端默认颜色。
 
 
 
@@ -29,6 +63,18 @@ Termbox的原生内置绘制方案非常的少，只有3个，仅支持最基本
 #### void tb_blit(int x, int y, int w, int h, const struct tb_cell* cells)
 
 此函数用的不多，该函数用于填充一个矩形区域，需要创建一个tb_cell结构体的二位数组。一般都是通过for循环直接用`tb_change_cell`函数绘制了。
+
+
+
+### 缓冲区
+
+#### void tb_present(void)
+
+在调用上述三个绘制API时，Termbox并不直接将内容绘制到终端界面上，而是先存到缓冲区里，因此需要调用`tb_present()`函数将内容输出到终端上。
+
+#### void tb_clear(void)
+
+该函数用于清除缓冲区的内容。
 
 
 
@@ -51,7 +97,7 @@ tb_init(); // 初始化termbox
 tb_clear(); //将屏幕清屏
 
 //绘制图案...
-//0x250C 是字符的unicode码，可以填写中文的unicode码来在中断显示中文
+//0x250C 是字符的unicode码，可以填写中文的unicode码来在终端显示中文
 tb_change_cell(0, 0, 0x250C, TB_WHITE, TB_DEFAULT); 
 tb_change_cell(79, 0, 0x2510, TB_WHITE, TB_DEFAULT);
 tb_change_cell(0, 23, 0x2514, TB_WHITE, TB_DEFAULT);

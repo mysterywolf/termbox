@@ -11,10 +11,12 @@
 #include <stddef.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <wcwidth.h>
 #include <rtthread.h>
 #include "termbox.h"
+#include <dfs_poll.h>
 
 /*---------------------memstream---------------------------*/
 struct memstream
@@ -846,7 +848,7 @@ static void update_term_size(void);
 static void send_attr(uint32_t fg, uint32_t bg);
 static void send_char(int x, int y, uint32_t c);
 static void send_clear(void);
-static int wait_fill_event(struct tb_event* event, void* unused);
+static int wait_fill_event(struct tb_event* event, struct timeval *timeout);
 
 // may happen in a different thread
 static volatile int buffer_size_change_request;
@@ -1464,19 +1466,72 @@ static void update_size(void)
     send_clear();
 }
 
-static int wait_fill_event(struct tb_event* event, void* unused)
+static int wait_fill_event(struct tb_event* event, struct timeval *timeout)
 {
-    extern char finsh_getchar(void);
-    size_t char_buf_len;
-    char char_buf;
+    char ch_buf[BUFFER_SIZE_MAX];
+    struct pollfd poll_fd;
+    int ret;
+
+    poll_fd.fd = STDIN_FILENO;
+    poll_fd.events = POLLIN;
+
+    rt_memset(event, 0, sizeof(struct tb_event));
+
+    // try to extract event from input buffer, return on success
+    event->type = TB_EVENT_KEY;
+    if (extract_event(event, &inbuf, inputmode) == RT_TRUE)
+    {
+        return event->type;
+    }
 
     while (1)
     {
-        char_buf = finsh_getchar();
-        char_buf_len = 1;
+        ret = poll(&poll_fd, 1, 1000000);
+        if(ret < 0)
+        {
+            continue; /* poll error */
+        }
+        else if(ret == 0)
+        {
+            continue; /* timeout */
+        }
 
-        ringbuffer_push(&inbuf, &char_buf, char_buf_len);
+        if(poll_fd.revents & POLLIN)
+        {
+            ret = read(STDIN_FILENO, ch_buf, BUFFER_SIZE_MAX);
+            if(ret > 0)
+            {
+                ringbuffer_push(&inbuf, ch_buf, ret);
+            }
+        }
 
+        /* get the rest of sequence */
+        while(1)
+        {
+            /* timeout:5. if the next character come in 5 ms, it will be
+                consider as a part of this sequence*/
+            ret = poll(&poll_fd, 1, 5);
+            if(ret < 0)
+            {
+                break; /* poll error */
+            }
+            else if(ret == 0)
+            {
+                break; /* timeout */
+            }
+
+            if(poll_fd.revents & POLLIN)
+            {
+                ret = read(STDIN_FILENO, ch_buf, BUFFER_SIZE_MAX);
+                if(ret <= 0)
+                {
+                    break;
+                }
+                ringbuffer_push(&inbuf, ch_buf, ret);
+            }
+        }
+
+        /* got a complete sequence and begin to analyze this sequence */
         event->type = TB_EVENT_KEY;
         if (extract_event(event, &inbuf, inputmode) == RT_TRUE)
         {

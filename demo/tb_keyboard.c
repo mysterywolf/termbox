@@ -730,7 +730,7 @@ static void dispatch_press(struct tb_event* ev)
     }
 }
 
-static int keyboard(int argc, char** argv)
+static int tb_keyboard(int argc, char** argv)
 {
     (void) argc;
     (void) argv;
@@ -808,4 +808,4 @@ static int keyboard(int argc, char** argv)
     return 0;
 }
 #include <finsh.h>
-MSH_CMD_EXPORT(keyboard, keyboard)
+MSH_CMD_EXPORT(tb_keyboard, termbox keyboard demo)

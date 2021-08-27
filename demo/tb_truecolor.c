@@ -1,6 +1,6 @@
 #include "../termbox.h"
 
-static int truecolor()
+static int tb_truecolor()
 {
     tb_init();
     tb_select_output_mode(TB_OUTPUT_TRUECOLOR);
@@ -68,4 +68,4 @@ static int truecolor()
     return 0;
 }
 #include <finsh.h>
-MSH_CMD_EXPORT(truecolor, truecolor)
+MSH_CMD_EXPORT(tb_truecolor, termbox truecolor demo)

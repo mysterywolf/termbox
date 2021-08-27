@@ -121,7 +121,7 @@ static void reallocBackBuffer(int w, int h)
     backbuf = calloc(sizeof(struct tb_cell), w * h);
 }
 
-static int paint(int argv, char** argc)
+static int tb_paint(int argv, char** argc)
 {
     (void)argc;
     (void)argv;
@@ -173,4 +173,4 @@ static int paint(int argv, char** argc)
     }
 }
 #include <finsh.h>
-MSH_CMD_EXPORT(paint, paint)
+MSH_CMD_EXPORT(tb_paint, termbox paint demo)

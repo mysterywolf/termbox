@@ -114,7 +114,7 @@ static void draw_all()
     tb_present();
 }
 
-static int output(int argc, char** argv)
+static int tb_output(int argc, char** argv)
 {
     (void)argc;
     (void)argv;
@@ -146,4 +146,4 @@ done:
     return 0;
 }
 #include <finsh.h>
-MSH_CMD_EXPORT(output, output)
+MSH_CMD_EXPORT(tb_output, termbox output demo)

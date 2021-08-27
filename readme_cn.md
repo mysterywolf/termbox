@@ -90,6 +90,20 @@ Termbox的原生内置绘制方案非常的少，只有3个，仅支持最基本
 
 
 
+### unicode编码
+
+由于Termbox只支持unicode编码（不是UTF-8、不是ascii），因此需要将我们熟悉的字符转为unicode编码，Termbox提供了两个函数来进行Unicode编码和UTF-8编码的相互转换。其实这两个函数不怎么方便的，因为如果字符的宽度大于1，有些编译器会开始报错（例如在keil编译器下，`char *p = “你” `会直接报错），认为char变量类型装不下。莫不如到网上找一个unicode转换工具，直接生成unicode编码来的方便。Termbox就是这个编码的问题不太友好。
+
+#### int utf8_char_to_unicode(uint32_t* out, const char* c)
+
+将一个以UTF-8编码形式的字符（ascii字符或者是ascii拓展字符），注意是一个，转化为unicode编码，从out里以指针的形式返回来。函数返回out数组的长度。因此需要实现准备一个缓冲区给out。这个函数只能处理一个字符，不能处理字符串！
+
+#### int utf8_unicode_to_char(char* out, uint32_t c)
+
+上面的函数的行为反过来。
+
+
+
 ## Termbox典型的绘制流程流程
 
 ```c

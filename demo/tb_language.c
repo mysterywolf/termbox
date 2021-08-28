@@ -1,6 +1,6 @@
 #include "../termbox.h"
 
-static int tb_language(void)
+static void tb_language(void)
 {
     struct tb_event ev;
 

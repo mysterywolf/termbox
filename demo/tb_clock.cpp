@@ -212,8 +212,6 @@ static int tb_clock (int argc, char **argv)
             tb_present();
         }
     }
-
-    return 0;
 }
 #include <finsh.h>
 MSH_CMD_EXPORT(tb_clock, tb_clock)

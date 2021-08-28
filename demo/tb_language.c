@@ -37,13 +37,14 @@ static void tb_language(void)
     /*以上展示的是使用原生termbox的API进行字符串输出，可以看到输出一个字符串非常的费劲*/
     /*为此，提供了termbox拓展API，即termbox2*/
     tb_string(0, 3, TB_CYAN, TB_DEFAULT, "你好中国");
+    tb_string(0, 4, TB_CYAN, TB_DEFAULT, "Hello world!");
 
     tb_present();
 
     while(1)
     {
         tb_poll_event(&ev);
-        if(ev.key == TB_KEY_CTRL_C)
+        if(ev.key == TB_KEY_CTRL_C || ev.key == TB_KEY_ESC)
         {
             break;
         }
@@ -53,4 +54,4 @@ static void tb_language(void)
 }
 
 #include <finsh.h>
-MSH_CMD_EXPORT(tb_language, Termbox language demo)
+MSH_CMD_EXPORT(tb_language, termbox language demo)

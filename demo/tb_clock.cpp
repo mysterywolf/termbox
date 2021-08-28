@@ -98,24 +98,6 @@ struct pixelfield_t {
             }
         }
     }
-
-//    void resize(int w, int h)
-//    {
-//        width = w / pixel_width;
-//        height = h / pixel_height;
-//    }
-
-//    void resize(int w, int h, int pw, int ph)
-//    {
-//        pixel_width = pw;
-//        pixel_height = ph;
-//        if (!pixel_width)
-//            pixel_width = 1;
-//        if (!pixel_height)
-//            pixel_height = 1;
-//        width = w / pixel_width;
-//        height = h / pixel_height;
-//    }
 };
 
 static void draw_digit(pixelfield_t &pf, int x, int y,
@@ -196,15 +178,6 @@ static int tb_clock (int argc, char **argv)
                     tb_shutdown();
                     return 0;
                 }
-//            case TB_EVENT_RESIZE:
-//                tb_clear();
-//                get_clock_dimensions(w, h);
-//                tbw = tb_width();
-//                tbh = tb_height();
-//                pf.resize(tbw, tbh, tbw / w, (tbw / w) / 2);
-//                draw_clock(pf);
-//                tb_present();
-//                break;
             }
         } else {
             tb_clear();
@@ -214,4 +187,4 @@ static int tb_clock (int argc, char **argv)
     }
 }
 #include <finsh.h>
-MSH_CMD_EXPORT(tb_clock, tb_clock)
+MSH_CMD_EXPORT(tb_clock, termbox clock demo)

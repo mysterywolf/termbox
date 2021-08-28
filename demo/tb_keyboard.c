@@ -737,7 +737,7 @@ static int tb_keyboard(int argc, char** argv)
 
     tb_init();
 
-    tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE); // mouse is useless if you use PuTTY
+    tb_select_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
     struct tb_event ev;
 
     tb_clear();

@@ -212,7 +212,7 @@ static int tb_clock (int argc, char **argv)
             tb_present();
         }
     }
-    tb_shutdown();
+
     return 0;
 }
 #include <finsh.h>

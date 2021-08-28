@@ -1570,7 +1570,7 @@ int tb_string_with_limit(int x, int y, uint32_t fg, uint32_t bg, const char *str
     {
         str += utf8_char_to_unicode(&uni, str);
         tb_char(x, y, fg, bg, uni);
-        w = wcwidth(uni) ? 2 : 1;
+        w = wcwidth(uni);
         x = x + w;
         l = l + w;
     }

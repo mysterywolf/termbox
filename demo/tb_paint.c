@@ -151,7 +151,7 @@ static int tb_paint(int argv, char** argc)
         switch (t)
         {
             case TB_EVENT_KEY:
-                if (ev.key == TB_KEY_ESC)
+                if (ev.key == TB_KEY_ESC || ev.key == TB_KEY_CTRL_C)
                 {
                     tb_shutdown();
                     return 0;

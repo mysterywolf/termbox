@@ -134,6 +134,7 @@ static int tb_output(int argc, char** argv)
                 switch (ev.key)
                 {
                     case TB_KEY_ESC:
+                    case TB_KEY_CTRL_C:
                         goto done;
                 }
 

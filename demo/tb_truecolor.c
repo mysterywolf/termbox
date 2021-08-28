@@ -60,7 +60,10 @@ static int tb_truecolor()
 
         if (t == TB_EVENT_KEY)
         {
-            break;
+            if (ev.key == TB_KEY_ESC || ev.key == TB_KEY_CTRL_C)
+            {
+                break;
+            }
         }
     }
 

@@ -6,6 +6,7 @@ src	= Glob('*.c')
 
 if GetDepend('TERMBOX_USING_DEMOS'):
     src += Glob('demo/*.c')
+    src += Glob('demo/*.cpp')
 
 path = [cwd]
 group = DefineGroup('termbox', src, depend = ['PKG_USING_TERMBOX'], CPPPATH = path)

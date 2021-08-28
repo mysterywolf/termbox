@@ -1539,3 +1539,61 @@ static int wait_fill_event(struct tb_event* event, int timeout)
         }
     }
 }
+
+/*-------------------termbox2--------------------------*/
+#define MAX_LIMIT 512
+static char print_buf[MAX_LIMIT];
+
+void tb_cell(int x, int y, const struct tb_cell *cell)
+{
+    if ((unsigned)x >= (unsigned)back_buffer.width)
+        return;
+
+    if ((unsigned)y >= (unsigned)back_buffer.height)
+        return;
+
+    CELL(&back_buffer, x, y) = *cell;
+}
+
+void tb_char(int x, int y, uint32_t fg, uint32_t bg, uint32_t ch)
+{
+    struct tb_cell c = {ch, fg, bg};
+    tb_cell(x, y, &c);
+}
+
+int tb_string_with_limit(int x, int y, uint32_t fg, uint32_t bg, const char *str, int limit)
+{
+    uint32_t uni;
+    int w, l = 0;
+
+    while (*str && l < limit)
+    {
+        str += utf8_char_to_unicode(&uni, str);
+        tb_char(x, y, fg, bg, uni);
+        w = wcwidth(uni) ? 2 : 1;
+        x = x + w;
+        l = l + w;
+    }
+
+    return l;
+}
+
+int tb_string(int x, int y, uint32_t fg, uint32_t bg, const char *str)
+{
+    return tb_string_with_limit(x, y, fg, bg, str, MAX_LIMIT);
+}
+
+int tb_stringf(int x, int y, uint32_t fg, uint32_t bg, const char *fmt, ...)
+{
+    va_list vl;
+    va_start(vl, fmt);
+    vsnprintf(print_buf, sizeof(print_buf), fmt, vl);
+    va_end(vl);
+    return tb_string(x, y, fg, bg, print_buf);
+}
+
+void tb_empty(int x, int y, uint32_t bg, int width)
+{
+    sprintf(print_buf, "%*s", width, "");
+    tb_string_with_limit(x, y, TB_DEFAULT, bg, print_buf, width);
+}

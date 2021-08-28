@@ -297,6 +297,13 @@ int utf8_char_length(char c);
 int utf8_char_to_unicode(uint32_t* out, const char* c);
 int utf8_unicode_to_char(char* out, uint32_t c);
 
+//termbox2
+void tb_char(int x, int y, uint32_t fg, uint32_t bg, uint32_t ch) ;
+int tb_string_with_limit(int x, int y, uint32_t fg, uint32_t bg, const char * str, int limit);
+int tb_string(int x, int y, uint32_t fg, uint32_t bg, const char *str);
+int tb_stringf(int x, int y, uint32_t fg, uint32_t bg, const char * fmt, ...);
+void tb_empty(int x, int y, uint32_t bg, int width);
+
 // c++
 #ifdef __cplusplus
 }

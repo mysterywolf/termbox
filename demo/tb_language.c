@@ -33,6 +33,11 @@ static int tb_language(void)
     tb_change_cell(6, 2, 0x0449, TB_CYAN, TB_DEFAULT); /* щ */
     tb_change_cell(7, 2, 0x0438, TB_CYAN, TB_DEFAULT); /* и */
 
+
+    /*以上展示的是使用原生termbox的API进行字符串输出，可以看到输出一个字符串非常的费劲*/
+    /*为此，提供了termbox拓展API，即termbox2*/
+    tb_string(0, 3, TB_CYAN, TB_DEFAULT, "你好中国");
+
     tb_present();
 
     while(1)
@@ -45,8 +50,6 @@ static int tb_language(void)
     }
 
     tb_shutdown();
-
-    return 0;
 }
 
 #include <finsh.h>

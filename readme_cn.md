@@ -54,7 +54,7 @@ Termbox的原生内置绘制方案非常的少，只有3个，仅支持最基本
 
 #### void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg, uint32_t bg)
 
-这个函数是termbox三个绘制函数当中的唯一常用函数。这个函数用于显示一个字符在指定的(x,y)屏幕坐标上，ch表示的是字符的内容，要求使用unicode编码，当然ascii的字符直接填里也是可以的；最后两个参数是前景色和背景色。背景色如果采用默认色即`TB_DEFAULT`，表示和终端打开时的背景色一样，例如PuTTY打开的时候就是黑色，那么背景色就保持黑色。
+这个函数是termbox三个绘制函数当中的唯一常用函数。这个函数用于显示一个字符在指定的(x,y)屏幕坐标上，ch表示的是字符的内容，要求使用Unicode编码。最后两个参数是前景色和背景色。背景色如果采用默认色即`TB_DEFAULT`，表示和终端打开时的背景色一样，例如PuTTY打开的时候就是黑色，那么背景色就保持黑色。
 
 #### void tb_put_cell(int x, int y, const struct tb_cell* cell)
 
@@ -90,17 +90,47 @@ Termbox的原生内置绘制方案非常的少，只有3个，仅支持最基本
 
 
 
-### unicode编码
+### Unicode编码
 
-由于Termbox只支持unicode编码（不是UTF-8、不是ascii），因此需要将我们熟悉的字符转为unicode编码，Termbox提供了两个函数来进行Unicode编码和UTF-8编码的相互转换。其实这两个函数不怎么方便的，因为如果字符的宽度大于1，有些编译器会开始报错（例如在keil编译器下，`char *p = “你” `会直接报错），认为char变量类型装不下。**莫不如到网上找一个unicode转换工具，直接生成unicode编码来的方便**。Termbox就是这个编码的问题不太友好。
+由于Termbox只支持Unicode编码（不是UTF-8、不是ASCII），因此需要将我们熟悉的字符转为Unicode编码，Termbox提供了两个函数来进行Unicode编码和UTF-8编码的相互转换。
 
 #### int utf8_char_to_unicode(uint32_t* out, const char* c)
 
-将一个以UTF-8编码形式的字符（ascii字符或者是ascii拓展字符），注意是一个，转化为unicode编码，从out里以指针的形式返回来。函数返回out数组的长度。因此需要实现准备一个缓冲区给out。这个函数只能处理一个字符，不能处理字符串！
+将一个以UTF-8编码形式的字符（ascii字符或者是ascii拓展字符），注意是一个，转化为Unicode编码，从out里以指针的形式返回来。函数返回out数组的长度。因此需要实现准备一个缓冲区给out。这个函数只能处理一个字符，不能处理字符串！
 
 #### int utf8_unicode_to_char(char* out, uint32_t c)
 
 上面的函数的行为反过来。
+
+
+
+## Termbox2 API
+
+因为原生的termbox提供的API只有12个，涉及到绘图的而且常用的只有一个绘制字符的函数，因为本仓库在原有termbox的原生API基础上，增加了一些常用的例如绘制字符串、绘制字符等功能的函数，并且用户也无需在考虑转换Unicode的问题了，因为函数内部已经自动转换了。部分函数源自[此仓库](https://github.com/tomas/termbox)，并命名为Termbox2.
+
+
+
+### 绘制字符以及字符串相关
+
+#### void tb_char(int x, int y, uint32_t fg, uint32_t bg, uint32_t ch)
+
+绘制一个字符，字符编码为Unicode编码。
+
+### int tb_string_with_limit(int x, int y, uint32_t fg, uint32_t bg, const char * str, int limit)
+
+绘制字符串，编码为UTF-8编码，函数内部自动转化为Unicode编码。limit表示字符串的最大字符限制。
+
+#### int tb_string(int x, int y, uint32_t fg, uint32_t bg, const char *str)
+
+绘制字符串，编码为UTF-8编码，函数内部自动转化为Unicode编码。
+
+#### int tb_stringf(int x, int y, uint32_t fg, uint32_t bg, const char * fmt, ...)
+
+以printf的方式绘制字符串，编码为UTF-8编码，函数内部自动转化为Unicode编码。
+
+#### void tb_empty(int x, int y, uint32_t bg, int width)
+
+清空某行的指定区域。
 
 
 
@@ -111,7 +141,7 @@ tb_init(); // 初始化termbox
 tb_clear(); //将屏幕清屏
 
 //绘制图案...
-//0x250C 是字符的unicode码，可以填写中文的unicode码来在终端显示中文
+//0x250C 是字符的Unicode码，可以填写中文的Unicode码来在终端显示中文
 tb_change_cell(0, 0, 0x250C, TB_WHITE, TB_DEFAULT); 
 tb_change_cell(79, 0, 0x2510, TB_WHITE, TB_DEFAULT);
 tb_change_cell(0, 23, 0x2514, TB_WHITE, TB_DEFAULT);

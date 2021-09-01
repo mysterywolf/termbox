@@ -130,7 +130,7 @@ Termbox的原生内置绘制方案非常的少，只有3个，仅支持最基本
 
 #### void tb_empty(int x, int y, uint32_t bg, int width)
 
-清空某行的指定区域。
+清空某行的某个字符。
 
 
 

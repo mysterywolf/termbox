@@ -262,26 +262,6 @@ static void ringbuffer_read(struct ringbuffer* r, void* data, size_t size)
 }
 
 /*---------------------utf8---------------------------*/
-static const unsigned char utf8_length[256] =
-{
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 1, 1
-};
-
 static const unsigned char utf8_mask[6] =
 {
     0x7F,
@@ -294,7 +274,7 @@ static const unsigned char utf8_mask[6] =
 
 int utf8_char_length(char c)
 {
-    return utf8_length[(unsigned char)c];
+    return utf8len_tab[(unsigned char)c];
 }
 
 int utf8_char_to_unicode(uint32_t* out, const char* c)
@@ -1542,7 +1522,7 @@ static int wait_fill_event(struct tb_event* event, int timeout)
 
 /*-------------------termbox2--------------------------*/
 #define MAX_LIMIT 512
-static char print_buf[MAX_LIMIT];
+static char _print_buf[MAX_LIMIT];
 
 void tb_cell(int x, int y, const struct tb_cell *cell)
 {
@@ -1587,13 +1567,13 @@ int tb_stringf(int x, int y, uint32_t fg, uint32_t bg, const char *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
-    vsnprintf(print_buf, sizeof(print_buf), fmt, vl);
+    vsnprintf(_print_buf, sizeof(_print_buf), fmt, vl);
     va_end(vl);
-    return tb_string(x, y, fg, bg, print_buf);
+    return tb_string(x, y, fg, bg, _print_buf);
 }
 
 void tb_empty(int x, int y, uint32_t bg, int width)
 {
-    sprintf(print_buf, "%*s", width, "");
-    tb_string_with_limit(x, y, TB_DEFAULT, bg, print_buf, width);
+    sprintf(_print_buf, "%*s", width, "");
+    tb_string_with_limit(x, y, TB_DEFAULT, bg, _print_buf, width);
 }

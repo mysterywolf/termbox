@@ -1469,11 +1469,11 @@ static int wait_fill_event(struct tb_event* event, int timeout)
         ret = poll(&poll_fd, 1, timeout);
         if(ret < 0)
         {
-            continue; /* poll error */
+            return 0; /* poll error */
         }
         else if(ret == 0)
         {
-            continue; /* timeout */
+            return 0; /* timeout */
         }
 
         if(poll_fd.revents & POLLIN)

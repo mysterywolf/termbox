@@ -167,14 +167,13 @@ static int tb_clock (int argc, char **argv)
     draw_clock(pf);
     tb_present();
 
-
     struct tb_event ev;
     while (1) {
-        int result = tb_peek_event(&ev, 100);
+        int result = tb_peek_event(&ev, 500);
         if (result) {
             switch (ev.type) {
             case TB_EVENT_KEY:
-                if (ev.ch == TB_KEY_ESC || ev.ch == TB_KEY_CTRL_C) {
+                if (ev.key == TB_KEY_ESC || ev.key == TB_KEY_CTRL_C) {
                     tb_shutdown();
                     return 0;
                 }

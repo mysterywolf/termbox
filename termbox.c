@@ -1524,7 +1524,7 @@ static int wait_fill_event(struct tb_event* event, int timeout)
 #define MAX_LIMIT 512
 static char _print_buf[MAX_LIMIT];
 
-void tb_cell(int x, int y, const struct tb_cell *cell)
+static void _tb_cell(int x, int y, const struct tb_cell *cell)
 {
     if ((unsigned)x >= (unsigned)back_buffer.width)
         return;
@@ -1538,7 +1538,7 @@ void tb_cell(int x, int y, const struct tb_cell *cell)
 void tb_char(int x, int y, uint32_t fg, uint32_t bg, uint32_t ch)
 {
     struct tb_cell c = {ch, fg, bg};
-    tb_cell(x, y, &c);
+    _tb_cell(x, y, &c);
 }
 
 int tb_string_with_limit(int x, int y, uint32_t fg, uint32_t bg, const char *str, int limit)

@@ -1567,13 +1567,13 @@ int tb_stringf(int x, int y, uint32_t fg, uint32_t bg, const char *fmt, ...)
 {
     va_list vl;
     va_start(vl, fmt);
-    vsnprintf(_print_buf, sizeof(_print_buf), fmt, vl);
+    rt_vsnprintf(_print_buf, sizeof(_print_buf), fmt, vl);
     va_end(vl);
     return tb_string(x, y, fg, bg, _print_buf);
 }
 
 void tb_empty(int x, int y, uint32_t bg, int width)
 {
-    sprintf(_print_buf, "%*s", width, "");
+    rt_sprintf(_print_buf, "%*s", width, "");
     tb_string_with_limit(x, y, TB_DEFAULT, bg, _print_buf, width);
 }

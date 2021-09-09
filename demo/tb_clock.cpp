@@ -9,10 +9,10 @@ struct tbclock_t {
     uint16_t fg;
 };
 
-const int font_width = 3;
-const int font_height = 5;
+static const int font_width = 3;
+static const int font_height = 5;
 
-const rt_bool_t font[][15] = {
+static const rt_bool_t font[][15] = {
     {1,1,1,
      1,0,1,
      1,0,1,
@@ -169,7 +169,7 @@ static int tb_clock (int argc, char **argv)
 
     struct tb_event ev;
     while (1) {
-        int result = tb_peek_event(&ev, 500);
+        int result = tb_peek_event(&ev, 200); /* fresh the terminal per 200ms */
         if (result) {
             switch (ev.type) {
             case TB_EVENT_KEY:

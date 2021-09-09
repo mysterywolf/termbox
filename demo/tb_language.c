@@ -35,9 +35,11 @@ static void tb_language(void)
 
 
     /*以上展示的是使用原生termbox的API进行字符串输出，可以看到输出一个字符串非常的费劲*/
-    /*为此，提供了termbox拓展API，即termbox2*/
+    /*为此，提供了termbox原生API的基础上拓展API，称之为termbox2 API*/
+    /*建议使用tb_string函数来显示字符串，无需考虑Unicode转码的问题，只要确保当前源文件编码为UTF-8即可*/
     tb_string(0, 3, TB_CYAN, TB_DEFAULT, "你好中国");
     tb_string(0, 4, TB_CYAN, TB_DEFAULT, "Hello world!");
+    tb_string(0, 5, TB_CYAN, TB_DEFAULT, "товарищи");
 
     tb_present();
 

@@ -6,6 +6,8 @@ static void tb_language(void)
 
     tb_init();
 
+    tb_select_output_mode(TB_OUTPUT_NORMAL);
+
     /* 中文 */
     /* 注意中文是两个字符宽度,因此是0,2,4,6,8 */
     tb_change_cell(0, 0, 0x4f60, TB_CYAN, TB_DEFAULT); /* 你 */
@@ -33,12 +35,15 @@ static void tb_language(void)
     tb_change_cell(6, 2, 0x0449, TB_CYAN, TB_DEFAULT); /* щ */
     tb_change_cell(7, 2, 0x0438, TB_CYAN, TB_DEFAULT); /* и */
 
-
     /*以上展示的是使用原生termbox的API进行字符串输出，可以看到输出一个字符串非常的费劲*/
     /*为此，提供了termbox原生API的基础上拓展API，称之为termbox2 API*/
+
+    tb_present(); /* 注意在切换显示模式之前需要将之前的内容显示出来 */
+    tb_select_output_mode(TB_OUTPUT_256);
+
     /*建议使用tb_string函数来显示字符串，无需考虑Unicode转码的问题，只要确保当前源文件编码为UTF-8即可*/
-    tb_string(0, 3, TB_CYAN, TB_DEFAULT, "你好中国");
-    tb_string(0, 4, TB_CYAN, TB_DEFAULT, "Hello world!");
+    tb_string(0, 3, tb_get_256_color(0x00FF00), tb_get_256_color(0xFFB6C1), "Hello world!"); /* 使用RGB颜色输出 */
+    tb_string(0, 4, TB_CYAN, TB_DEFAULT, "你好中国");
     tb_string(0, 5, TB_CYAN, TB_DEFAULT, "товарищи");
 
     tb_present();
@@ -46,9 +51,16 @@ static void tb_language(void)
     while(1)
     {
         tb_poll_event(&ev);
-        if(ev.key == TB_KEY_CTRL_C || ev.key == TB_KEY_ESC)
+        if(ev.type == TB_EVENT_KEY) /* 事件类型为按键输入 */
         {
-            break;
+            if(ev.key == TB_KEY_CTRL_C || ev.key == TB_KEY_ESC)
+            {
+                break;
+            }
+            if(ev.ch == 'q') /* 字母按键用.ch，功能按键用.key */
+            {
+                break;
+            }
         }
     }
 

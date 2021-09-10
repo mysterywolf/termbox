@@ -1577,3 +1577,28 @@ void tb_empty(int x, int y, uint32_t bg, int width)
     rt_sprintf(_print_buf, "%*s", width, "");
     tb_string_with_limit(x, y, TB_DEFAULT, bg, _print_buf, width);
 }
+
+static int steps[6] = { 47, 115, 155, 195, 235, 256 }; // in between of each level
+
+uint8_t tb_get_256_color(uint32_t color)
+{
+  /* extract rgb values from number (e.g. 0xffcc00 -> 16763904) */
+  uint8_t rgb[3] = { 0, 0, 0 }; // r, g, b
+  rgb[0] = (color >> 16) & 0xFF; // e.g. 255
+  rgb[1] = (color >> 8)  & 0xFF; // e.g. 204
+  rgb[2] = (color >> 0)  & 0xFF; // e.g. 0
+
+  /* now, translate rgb to their most similar value between the 0-5 range */
+  int nums[3] = { 0, 0, 0 };
+  for (int c = 0; c < 3; c++) {
+    for (int i = 0; i < 6; i++) {
+      if (steps[i] > rgb[c]) {
+        nums[c] = i;
+        break;
+      }
+    }
+  }
+
+  /* 16 + (r * 36) + (g * 6) + b */
+  return 16 + (nums[0] * 36) + (nums[1] * 6) + nums[2];
+}

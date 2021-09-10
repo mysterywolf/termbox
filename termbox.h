@@ -303,6 +303,7 @@ int tb_string_with_limit(int x, int y, uint32_t fg, uint32_t bg, const char * st
 int tb_string(int x, int y, uint32_t fg, uint32_t bg, const char *str);
 int tb_stringf(int x, int y, uint32_t fg, uint32_t bg, const char * fmt, ...);
 void tb_empty(int x, int y, uint32_t bg, int width);
+uint8_t tb_get_256_color(uint32_t color);
 
 // c++
 #ifdef __cplusplus

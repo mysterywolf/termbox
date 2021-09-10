@@ -42,7 +42,7 @@ static void tb_language(void)
     tb_select_output_mode(TB_OUTPUT_256);
 
     /*建议使用tb_string函数来显示字符串，无需考虑Unicode转码的问题，只要确保当前源文件编码为UTF-8即可*/
-    tb_string(0, 3, tb_get_256_color(0x00FF00), tb_get_256_color(0xFFB6C1), "Hello world!"); /* 使用RGB颜色输出 */
+    tb_string(0, 3, tb_rgb(0x00FF00), tb_rgb(0xFFB6C1), "Hello world!"); /* 使用RGB颜色输出 */
     tb_string(0, 4, TB_CYAN, TB_DEFAULT, "你好中国");
     tb_string(0, 5, TB_CYAN, TB_DEFAULT, "товарищи");
 

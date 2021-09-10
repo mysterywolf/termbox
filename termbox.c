@@ -1580,7 +1580,7 @@ void tb_empty(int x, int y, uint32_t bg, int width)
 
 static int steps[6] = { 47, 115, 155, 195, 235, 256 }; // in between of each level
 
-uint8_t tb_get_256_color(uint32_t color)
+static uint8_t _get_256_color(uint32_t color)
 {
   /* extract rgb values from number (e.g. 0xffcc00 -> 16763904) */
   uint8_t rgb[3] = { 0, 0, 0 }; // r, g, b
@@ -1601,4 +1601,41 @@ uint8_t tb_get_256_color(uint32_t color)
 
   /* 16 + (r * 36) + (g * 6) + b */
   return 16 + (nums[0] * 36) + (nums[1] * 6) + nums[2];
+}
+
+static uint8_t base_colors[8][3] = {
+ { 1, 1, 1 }, // black
+ { 1, 0, 0 }, // red
+ { 0, 1, 0 }, // green
+ { 1, 1, 0 }, // yellow
+ { 0, 0, 1 }, // blue
+ { 1, 0, 1 }, // magenta
+ { 0, 1, 1 }, // cyan
+ { 1, 1, 1 }  // white
+};
+
+static uint8_t _get_base_color(uint32_t color)
+{
+  /* extract rgb values and round them to either 0 or 1 */
+  uint8_t rgb[3] = { 0, 0, 0 }; // r, g, b
+  rgb[0] = ((color >> 16) & 0xFF) > 128 ? 1 : 0;
+  rgb[1] = ((color >> 8)  & 0xFF) > 128 ? 1 : 0;
+  rgb[2] = ((color >> 0)  & 0xFF) > 128 ? 1 : 0;
+
+  for (uint8_t i = 0; i < 8; i++) {
+    if (base_colors[i][0] == rgb[0] && base_colors[i][1] == rgb[1] && base_colors[i][2] == rgb[2]) {
+      return i;
+    }
+  }
+
+  return 0; // default
+}
+
+uint8_t tb_rgb(uint32_t in)
+{
+  if (outputmode == TB_OUTPUT_256) {
+    return _get_256_color(in);
+  } else {
+    return _get_base_color(in);
+  }
 }

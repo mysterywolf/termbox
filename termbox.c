@@ -10,13 +10,13 @@
 
 #include <stddef.h>
 #include <fcntl.h>
+#include <poll.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <unistd.h>
 #include <wcwidth.h>
 #include <rtthread.h>
 #include "termbox.h"
-#include <dfs_poll.h>
 
 /*---------------------memstream---------------------------*/
 struct memstream

@@ -781,6 +781,8 @@ static rt_bool_t extract_event(struct tb_event* event, struct ringbuffer* inbuf,
 
 
 /*---------------------termbox---------------------------*/
+#define TERMBOX_WAIT_FOREVER    RT_TICK_MAX/2 - 1
+
 struct cellbuf
 {
     int width;
@@ -1044,7 +1046,7 @@ struct tb_cell* tb_cell_buffer(void)
 
 int tb_poll_event(struct tb_event* event)
 {
-    return wait_fill_event(event, RT_TICK_MAX/2 - 1);
+    return wait_fill_event(event, TERMBOX_WAIT_FOREVER);
 }
 
 int tb_peek_event(struct tb_event* event, int timeout)
@@ -1473,7 +1475,14 @@ static int wait_fill_event(struct tb_event* event, int timeout)
         }
         else if(ret == 0)
         {
-            return 0; /* timeout */
+            if(timeout == TERMBOX_WAIT_FOREVER)
+            {
+                continue; /* continue waitting forever */
+            }
+            else
+            {
+                return 0; /* timeout */
+            }
         }
 
         if(poll_fd.revents & POLLIN)

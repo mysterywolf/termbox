@@ -464,6 +464,7 @@ static const char** funcs;
 
 static int init_term(void)
 {
+    /* putty supports sterm, which can let you to use mouse */
     keys = xterm_keys;
     funcs = xterm_funcs;
     return 0;
@@ -1296,7 +1297,12 @@ static void update_term_size(void)
     struct winsize sz;
     rt_memset(&sz, 0, sizeof(sz));
 
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &sz);
+    if(ioctl(STDOUT_FILENO, TIOCGWINSZ, &sz) < 0)
+    {
+        /* use default value if we cannot get the window size */
+        termw = 80;
+        termh = 24;
+    }
 
     termw = sz.ws_col > 0 ? sz.ws_col : 80;
     termh = sz.ws_row > 0 ? sz.ws_row : 24;

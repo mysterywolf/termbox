@@ -1593,7 +1593,7 @@ void tb_empty(int x, int y, uint32_t bg, int width)
     tb_string_with_limit(x, y, TB_DEFAULT, bg, _print_buf, width);
 }
 
-static int steps[6] = { 47, 115, 155, 195, 235, 256 }; // in between of each level
+static const unsigned short int steps[6] = {47, 115, 155, 195, 235, 256}; // in between of each level
 
 static uint8_t _get_256_color(uint32_t color)
 {
@@ -1618,7 +1618,7 @@ static uint8_t _get_256_color(uint32_t color)
   return 16 + (nums[0] * 36) + (nums[1] * 6) + nums[2];
 }
 
-static uint8_t base_colors[8][3] = {
+static const uint8_t base_colors[8][3] = {
  { 1, 1, 1 }, // black
  { 1, 0, 0 }, // red
  { 0, 1, 0 }, // green

@@ -1642,7 +1642,8 @@ static uint8_t _get_256_color(uint32_t color)
   return 16 + (nums[0] * 36) + (nums[1] * 6) + nums[2];
 }
 
-static const uint8_t base_colors[8][3] = {
+static const uint8_t base_colors[8][3] =
+{
  { 1, 1, 1 }, // black
  { 1, 0, 0 }, // red
  { 0, 1, 0 }, // green

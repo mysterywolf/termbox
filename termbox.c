@@ -18,6 +18,10 @@
 #include <rtthread.h>
 #include "termbox.h"
 
+#define DBG_TAG    "termbox"
+#define DBG_LVL    DBG_INFO
+#include <rtdbg.h>
+
 /*---------------------memstream---------------------------*/
 struct memstream
 {
@@ -80,9 +84,9 @@ static void clear_ringbuffer(struct ringbuffer* r)
 static int init_ringbuffer(struct ringbuffer* r, size_t size)
 {
     r->buf = (char*)rt_malloc(size);
-
-    if (!r->buf)
+    if (r->buf == RT_NULL)
     {
+        LOG_E("init_ringbuffer malloc error!");
         return ERINGBUFFER_ALLOC_FAIL;
     }
 
@@ -795,7 +799,9 @@ struct cellbuf
 #define IS_CURSOR_HIDDEN(cx, cy) (cx == -1 || cy == -1)
 #define LAST_COORD_INIT -1
 
-//static struct termios orig_tios;
+#ifndef PKG_USING_TERMBOX_INPUT_BUFFER_SIZE
+#define PKG_USING_TERMBOX_INPUT_BUFFER_SIZE RT_SERIAL_RB_BUFSZ
+#endif
 
 static struct cellbuf back_buffer;
 static struct cellbuf front_buffer;
@@ -852,7 +858,7 @@ int tb_init(void)
     cellbuf_init(&front_buffer, termw, termh);
     cellbuf_clear(&back_buffer);
     cellbuf_clear(&front_buffer);
-    init_ringbuffer(&inbuf, 4096);
+    init_ringbuffer(&inbuf, PKG_USING_TERMBOX_INPUT_BUFFER_SIZE);
 
     return 0;
 }
@@ -1241,7 +1247,11 @@ static void write_sgr(uint32_t fg, uint32_t bg)
 static void cellbuf_init(struct cellbuf* buf, int width, int height)
 {
     buf->cells = (struct tb_cell*)rt_malloc(sizeof(struct tb_cell) * width * height);
-    RT_ASSERT(buf->cells);
+    if(buf->cells == RT_NULL)
+    {
+        LOG_E("cellbuf_init malloc error!");
+    }
+
     buf->width = width;
     buf->height = height;
 }
@@ -1249,6 +1259,11 @@ static void cellbuf_init(struct cellbuf* buf, int width, int height)
 static void cellbuf_resize(struct cellbuf* buf, int width, int height)
 {
     if (buf->width == width && buf->height == height)
+    {
+        return;
+    }
+
+    if(buf->cells == RT_NULL)
     {
         return;
     }
@@ -1278,6 +1293,11 @@ static void cellbuf_clear(struct cellbuf* buf)
 {
     int i;
     int ncells = buf->width * buf->height;
+
+    if(buf->cells == RT_NULL)
+    {
+        return;
+    }
 
     for (i = 0; i < ncells; ++i)
     {

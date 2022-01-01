@@ -149,6 +149,6 @@ tb_change_cell(79, 23, 0x2518, TB_WHITE, TB_DEFAULT);
 
 tb_present(); // 使用tb_change_cell仅仅是将绘制内容存到了缓冲区，利用该函数才能将绘制的内容显示出来
 
-tb_shutdown(); //结束termbox，会将屏幕绘制的内容清空
+tb_shutdown(); //结束termbox，会将屏幕绘制的内容清空，并恢复终端之前显示的内容（比如命令行的信息）
 ```
 

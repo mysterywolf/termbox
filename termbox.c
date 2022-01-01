@@ -468,7 +468,7 @@ static const char** funcs;
 
 static int init_term(void)
 {
-    /* putty supports sterm, which can let you to use mouse */
+    /* PuTTY supports sterm by default, which can let you to use mouse */
     keys = xterm_keys;
     funcs = xterm_funcs;
     return 0;
@@ -803,9 +803,13 @@ struct cellbuf
 #define PKG_USING_TERMBOX_INPUT_BUFFER_SIZE RT_SERIAL_RB_BUFSZ
 #endif
 
+#ifndef PKG_USING_TERMBOX_OUTPUT_BUFFER_SIZE
+#define PKG_USING_TERMBOX_OUTPUT_BUFFER_SIZE 512
+#endif
+
 static struct cellbuf back_buffer;
 static struct cellbuf front_buffer;
-static unsigned char write_buffer_data[1024];
+static unsigned char write_buffer_data[PKG_USING_TERMBOX_OUTPUT_BUFFER_SIZE];
 static struct memstream write_buffer;
 
 static int termw = -1;
@@ -1556,7 +1560,7 @@ static int wait_fill_event(struct tb_event* event, int timeout)
 }
 
 /*-------------------termbox2--------------------------*/
-#define MAX_LIMIT 512
+#define MAX_LIMIT RT_CONSOLEBUF_SIZE
 static char _print_buf[MAX_LIMIT];
 
 static void _tb_cell(int x, int y, const struct tb_cell *cell)

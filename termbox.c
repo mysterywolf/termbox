@@ -1563,21 +1563,10 @@ static int wait_fill_event(struct tb_event* event, int timeout)
 #define MAX_LIMIT RT_CONSOLEBUF_SIZE
 static char _print_buf[MAX_LIMIT];
 
-static void _tb_cell(int x, int y, const struct tb_cell *cell)
-{
-    if ((unsigned)x >= (unsigned)back_buffer.width)
-        return;
-
-    if ((unsigned)y >= (unsigned)back_buffer.height)
-        return;
-
-    CELL(&back_buffer, x, y) = *cell;
-}
-
 void tb_char(int x, int y, uint32_t fg, uint32_t bg, uint32_t ch)
 {
     struct tb_cell c = {ch, fg, bg};
-    _tb_cell(x, y, &c);
+    tb_put_cell(x, y, &c);
 }
 
 int tb_string_with_limit(int x, int y, uint32_t fg, uint32_t bg, const char *str, int limit)

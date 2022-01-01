@@ -129,12 +129,12 @@ extern "C" {
 // - 'ch' is a unicode character
 // - 'fg' foreground color and attributes
 // - 'bg' background color and attributes
-struct tb_cell
+typedef struct tb_cell
 {
     uint32_t ch;
     uint32_t fg;
     uint32_t bg;
-};
+}tb_cell_t;
 
 #define TB_EVENT_KEY    1
 #define TB_EVENT_MOUSE  3

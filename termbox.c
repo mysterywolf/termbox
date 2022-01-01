@@ -795,7 +795,9 @@ struct cellbuf
     struct tb_cell* cells;
 };
 
+#ifdef TB_USING_FRAMEBUFFER
 #define CELL(buf, x, y) (buf)->cells[(y) * (buf)->width + (x)]
+#endif
 #define IS_CURSOR_HIDDEN(cx, cy) (cx == -1 || cy == -1)
 #define LAST_COORD_INIT -1
 
@@ -807,8 +809,10 @@ struct cellbuf
 #define TB_OUTPUT_BUFFER_SIZE 512
 #endif
 
+#ifdef TB_USING_FRAMEBUFFER
 static struct cellbuf back_buffer;
 static struct cellbuf front_buffer;
+#endif
 static unsigned char write_buffer_data[TB_OUTPUT_BUFFER_SIZE];
 static struct memstream write_buffer;
 
@@ -858,10 +862,14 @@ int tb_init(void)
     send_clear();
 
     update_term_size();
+
+#ifdef TB_USING_FRAMEBUFFER
     cellbuf_init(&back_buffer, termw, termh);
     cellbuf_init(&front_buffer, termw, termh);
     cellbuf_clear(&back_buffer);
     cellbuf_clear(&front_buffer);
+#endif
+
     init_ringbuffer(&inbuf, TB_INPUT_BUFFER_SIZE);
 
     return 0;
@@ -882,21 +890,26 @@ void tb_shutdown(void)
     memstream_puts(&write_buffer, funcs[T_EXIT_MOUSE]);
     memstream_flush(&write_buffer);
 
+#ifdef TB_USING_FRAMEBUFFER
     cellbuf_free(&back_buffer);
     cellbuf_free(&front_buffer);
+#endif
     free_ringbuffer(&inbuf);
     termw = termh = -1;
 }
 
 void tb_present(void)
 {
+#ifdef TB_USING_FRAMEBUFFER
     int x, y, w, i;
     struct tb_cell* back, *front;
+#endif
 
     // invalidate cursor position
     lastx = LAST_COORD_INIT;
     lasty = LAST_COORD_INIT;
 
+#ifdef TB_USING_FRAMEBUFFER
     if (buffer_size_change_request)
     {
         update_size();
@@ -953,7 +966,7 @@ void tb_present(void)
     {
         write_cursor(cursor_x, cursor_y);
     }
-
+#endif
     memstream_flush(&write_buffer);
 }
 
@@ -980,6 +993,7 @@ void tb_set_cursor(int cx, int cy)
 
 void tb_put_cell(int x, int y, const struct tb_cell* cell)
 {
+#ifdef TB_USING_FRAMEBUFFER
     if ((unsigned)x >= (unsigned)back_buffer.width)
     {
         return;
@@ -991,6 +1005,10 @@ void tb_put_cell(int x, int y, const struct tb_cell* cell)
     }
 
     CELL(&back_buffer, x, y) = *cell;
+#else
+    send_attr(cell->fg, cell->bg);
+    send_char(x, y, cell->ch);
+#endif
 }
 
 void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg, uint32_t bg)
@@ -999,61 +1017,61 @@ void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg, uint32_t bg)
     tb_put_cell(x, y, &c);
 }
 
-void tb_blit(int x, int y, int w, int h, const struct tb_cell* cells)
-{
-    if (x + w < 0 || x >= back_buffer.width)
-    {
-        return;
-    }
+//void tb_blit(int x, int y, int w, int h, const struct tb_cell* cells)
+//{
+//    if (x + w < 0 || x >= back_buffer.width)
+//    {
+//        return;
+//    }
 
-    if (y + h < 0 || y >= back_buffer.height)
-    {
-        return;
-    }
+//    if (y + h < 0 || y >= back_buffer.height)
+//    {
+//        return;
+//    }
 
-    int xo = 0, yo = 0, ww = w, hh = h;
+//    int xo = 0, yo = 0, ww = w, hh = h;
 
-    if (x < 0)
-    {
-        xo = -x;
-        ww -= xo;
-        x = 0;
-    }
+//    if (x < 0)
+//    {
+//        xo = -x;
+//        ww -= xo;
+//        x = 0;
+//    }
 
-    if (y < 0)
-    {
-        yo = -y;
-        hh -= yo;
-        y = 0;
-    }
+//    if (y < 0)
+//    {
+//        yo = -y;
+//        hh -= yo;
+//        y = 0;
+//    }
 
-    if (ww > back_buffer.width - x)
-    {
-        ww = back_buffer.width - x;
-    }
+//    if (ww > back_buffer.width - x)
+//    {
+//        ww = back_buffer.width - x;
+//    }
 
-    if (hh > back_buffer.height - y)
-    {
-        hh = back_buffer.height - y;
-    }
+//    if (hh > back_buffer.height - y)
+//    {
+//        hh = back_buffer.height - y;
+//    }
 
-    int sy;
-    struct tb_cell* dst = &CELL(&back_buffer, x, y);
-    const struct tb_cell* src = cells + yo * w + xo;
-    size_t size = sizeof(struct tb_cell) * ww;
+//    int sy;
+//    struct tb_cell* dst = &CELL(&back_buffer, x, y);
+//    const struct tb_cell* src = cells + yo * w + xo;
+//    size_t size = sizeof(struct tb_cell) * ww;
 
-    for (sy = 0; sy < hh; ++sy)
-    {
-        rt_memcpy(dst, src, size);
-        dst += back_buffer.width;
-        src += w;
-    }
-}
+//    for (sy = 0; sy < hh; ++sy)
+//    {
+//        rt_memcpy(dst, src, size);
+//        dst += back_buffer.width;
+//        src += w;
+//    }
+//}
 
-struct tb_cell* tb_cell_buffer(void)
-{
-    return back_buffer.cells;
-}
+//struct tb_cell* tb_cell_buffer(void)
+//{
+//    return back_buffer.cells;
+//}
 
 int tb_poll_event(struct tb_event* event)
 {
@@ -1083,7 +1101,9 @@ void tb_clear(void)
         buffer_size_change_request = 0;
     }
 
+#ifdef TB_USING_FRAMEBUFFER
     cellbuf_clear(&back_buffer);
+#endif
 }
 
 int tb_select_input_mode(int mode)
@@ -1472,9 +1492,11 @@ static void send_clear(void)
 static void update_size(void)
 {
     update_term_size();
+#ifdef TB_USING_FRAMEBUFFER
     cellbuf_resize(&back_buffer, termw, termh);
     cellbuf_resize(&front_buffer, termw, termh);
     cellbuf_clear(&front_buffer);
+#endif
     send_clear();
 }
 

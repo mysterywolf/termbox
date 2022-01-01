@@ -451,16 +451,16 @@ enum
 // xterm
 static const char* xterm_keys[] =
 {
- "\033OP", "\033OQ", "\033OR", "\033OS", "\033[15~", "\033[17~", "\033[18~",
- "\033[19~", "\033[20~", "\033[21~", "\033[23~", "\033[24~", "\033[2~",
- "\033[3~", "\033OH", "\033OF", "\033[5~", "\033[6~", "\033OA", "\033OB",
- "\033OD", "\033OC", NULL
+    "\033OP", "\033OQ", "\033OR", "\033OS", "\033[15~", "\033[17~", "\033[18~",
+    "\033[19~", "\033[20~", "\033[21~", "\033[23~", "\033[24~", "\033[2~",
+    "\033[3~", "\033OH", "\033OF", "\033[5~", "\033[6~", "\033OA", "\033OB",
+    "\033OD", "\033OC", NULL
 };
 static const char* xterm_funcs[] =
 {
- "\033[?1049h", "\033[?1049l", "\033[?12l\033[?25h", "\033[?25l",
- "\033[H\033[2J", "\033(B\033[m", "\033[4m", "\033[1m", "\033[5m", "\033[7m",
- "\033[?1h\033=", "\033[?1l\033>", ENTER_MOUSE_SEQ, EXIT_MOUSE_SEQ,
+    "\033[?1049h", "\033[?1049l", "\033[?12l\033[?25h", "\033[?25l",
+    "\033[H\033[2J", "\033(B\033[m", "\033[4m", "\033[1m", "\033[5m", "\033[7m",
+    "\033[?1h\033=", "\033[?1l\033>", ENTER_MOUSE_SEQ, EXIT_MOUSE_SEQ,
 };
 
 static const char** keys;
@@ -799,17 +799,17 @@ struct cellbuf
 #define IS_CURSOR_HIDDEN(cx, cy) (cx == -1 || cy == -1)
 #define LAST_COORD_INIT -1
 
-#ifndef PKG_USING_TERMBOX_INPUT_BUFFER_SIZE
-#define PKG_USING_TERMBOX_INPUT_BUFFER_SIZE RT_SERIAL_RB_BUFSZ
+#ifndef TB_INPUT_BUFFER_SIZE
+#define TB_INPUT_BUFFER_SIZE RT_SERIAL_RB_BUFSZ
 #endif
 
-#ifndef PKG_USING_TERMBOX_OUTPUT_BUFFER_SIZE
-#define PKG_USING_TERMBOX_OUTPUT_BUFFER_SIZE 512
+#ifndef TB_OUTPUT_BUFFER_SIZE
+#define TB_OUTPUT_BUFFER_SIZE 512
 #endif
 
 static struct cellbuf back_buffer;
 static struct cellbuf front_buffer;
-static unsigned char write_buffer_data[PKG_USING_TERMBOX_OUTPUT_BUFFER_SIZE];
+static unsigned char write_buffer_data[TB_OUTPUT_BUFFER_SIZE];
 static struct memstream write_buffer;
 
 static int termw = -1;
@@ -862,7 +862,7 @@ int tb_init(void)
     cellbuf_init(&front_buffer, termw, termh);
     cellbuf_clear(&back_buffer);
     cellbuf_clear(&front_buffer);
-    init_ringbuffer(&inbuf, PKG_USING_TERMBOX_INPUT_BUFFER_SIZE);
+    init_ringbuffer(&inbuf, TB_INPUT_BUFFER_SIZE);
 
     return 0;
 }

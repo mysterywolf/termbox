@@ -1,8 +1,6 @@
 # Termbox for RT-Thread
 [中文说明文档](readme_cn.md)
 
-This repository forks from [nullgemm/termbox_next](https://github.com/nullgemm/termbox_next)
-
 ## Getting started
 Termbox's interface only consists of 12 functions:
 ```c
@@ -44,4 +42,6 @@ See `termbox.h` header file for full detail.
 Maintainer: [Meco Man](https://github.com/mysterywolf)
 
 Homepage: <https://github.com/mysterywolf/termbox>
+
+This repository forks from [nullgemm/termbox_next](https://github.com/nullgemm/termbox_next) and [termbox2](https://github.com/termbox/termbox2)
 

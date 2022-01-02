@@ -788,6 +788,7 @@ static rt_bool_t extract_event(struct tb_event* event, struct ringbuffer* inbuf,
 /*---------------------termbox---------------------------*/
 #define TERMBOX_WAIT_FOREVER    RT_TICK_MAX/2 - 1
 
+#ifndef TB_NO_MEMDEV
 struct cellbuf
 {
     int width;
@@ -796,6 +797,8 @@ struct cellbuf
 };
 
 #define CELL(buf, x, y) (buf)->cells[(y) * (buf)->width + (x)]
+#endif
+
 #define IS_CURSOR_HIDDEN(cx, cy) (cx == -1 || cy == -1)
 #define LAST_COORD_INIT -1
 
@@ -807,8 +810,10 @@ struct cellbuf
 #define TB_OUTPUT_BUFFER_SIZE 512
 #endif
 
+#ifndef TB_NO_MEMDEV
 static struct cellbuf back_buffer;
 static struct cellbuf front_buffer;
+#endif
 static unsigned char write_buffer_data[TB_OUTPUT_BUFFER_SIZE];
 static struct memstream write_buffer;
 
@@ -831,10 +836,12 @@ static uint32_t foreground = TB_DEFAULT;
 static void write_cursor(int x, int y);
 static void write_sgr(uint32_t fg, uint32_t bg);
 
+#ifndef TB_NO_MEMDEV
 static void cellbuf_init(struct cellbuf* buf, int width, int height);
 static void cellbuf_resize(struct cellbuf* buf, int width, int height);
 static void cellbuf_clear(struct cellbuf* buf);
 static void cellbuf_free(struct cellbuf* buf);
+#endif
 
 static void update_size(void);
 static void update_term_size(void);
@@ -858,10 +865,14 @@ int tb_init(void)
     send_clear();
 
     update_term_size();
+
+#ifndef TB_NO_MEMDEV
     cellbuf_init(&back_buffer, termw, termh);
     cellbuf_init(&front_buffer, termw, termh);
     cellbuf_clear(&back_buffer);
     cellbuf_clear(&front_buffer);
+#endif
+
     init_ringbuffer(&inbuf, TB_INPUT_BUFFER_SIZE);
 
     return 0;
@@ -882,14 +893,17 @@ void tb_shutdown(void)
     memstream_puts(&write_buffer, funcs[T_EXIT_MOUSE]);
     memstream_flush(&write_buffer);
 
+#ifndef TB_NO_MEMDEV
     cellbuf_free(&back_buffer);
     cellbuf_free(&front_buffer);
+#endif
     free_ringbuffer(&inbuf);
     termw = termh = -1;
 }
 
 void tb_present(void)
 {
+#ifndef TB_NO_MEMDEV
     int x, y, w, i;
     struct tb_cell* back, *front;
 
@@ -953,7 +967,7 @@ void tb_present(void)
     {
         write_cursor(cursor_x, cursor_y);
     }
-
+#endif /* TB_NO_MEMDEV */
     memstream_flush(&write_buffer);
 }
 
@@ -980,6 +994,7 @@ void tb_set_cursor(int cx, int cy)
 
 void tb_put_cell(int x, int y, const struct tb_cell* cell)
 {
+#ifndef TB_NO_MEMDEV
     if ((unsigned)x >= (unsigned)back_buffer.width)
     {
         return;
@@ -991,6 +1006,10 @@ void tb_put_cell(int x, int y, const struct tb_cell* cell)
     }
 
     CELL(&back_buffer, x, y) = *cell;
+#else
+    send_attr(cell->fg, cell->bg);
+    send_char(x, y, cell->ch);
+#endif
 }
 
 void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg, uint32_t bg)
@@ -999,6 +1018,7 @@ void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg, uint32_t bg)
     tb_put_cell(x, y, &c);
 }
 
+#ifndef TB_NO_MEMDEV
 void tb_blit(int x, int y, int w, int h, const struct tb_cell* cells)
 {
     if (x + w < 0 || x >= back_buffer.width)
@@ -1054,6 +1074,7 @@ struct tb_cell* tb_cell_buffer(void)
 {
     return back_buffer.cells;
 }
+#endif /* TB_NO_MEMDEV */
 
 int tb_poll_event(struct tb_event* event)
 {
@@ -1083,7 +1104,9 @@ void tb_clear(void)
         buffer_size_change_request = 0;
     }
 
+#ifndef TB_NO_MEMDEV
     cellbuf_clear(&back_buffer);
+#endif
 }
 
 int tb_select_input_mode(int mode)
@@ -1248,6 +1271,7 @@ static void write_sgr(uint32_t fg, uint32_t bg)
     }
 }
 
+#ifndef TB_NO_MEMDEV
 static void cellbuf_init(struct cellbuf* buf, int width, int height)
 {
     buf->cells = (struct tb_cell*)rt_malloc(sizeof(struct tb_cell) * width * height);
@@ -1315,6 +1339,7 @@ static void cellbuf_free(struct cellbuf* buf)
 {
     rt_free(buf->cells);
 }
+#endif /* TB_NO_MEMDEV */
 
 static void update_term_size(void)
 {
@@ -1424,6 +1449,7 @@ static void send_attr(uint32_t fg, uint32_t bg)
         lastfg = fg;
         lastbg = bg;
     }
+#undef LAST_ATTR_INIT
 }
 
 static void send_char(int x, int y, uint32_t c)
@@ -1472,9 +1498,11 @@ static void send_clear(void)
 static void update_size(void)
 {
     update_term_size();
+#ifndef TB_NO_MEMDEV
     cellbuf_resize(&back_buffer, termw, termh);
     cellbuf_resize(&front_buffer, termw, termh);
     cellbuf_clear(&front_buffer);
+#endif
     send_clear();
 }
 

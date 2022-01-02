@@ -198,6 +198,7 @@ void tb_set_cursor(int cx, int cy);
 void tb_put_cell(int x, int y, const struct tb_cell* cell);
 void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg, uint32_t bg);
 
+#ifndef TB_NO_MEMDEV
 // Copies the buffer from 'cells' at the specified position, assuming the
 // buffer is a two-dimensional array of size ('w' x 'h'), represented as a
 // one-dimensional buffer containing lines of cells starting from the top.
@@ -209,6 +210,7 @@ void tb_blit(int x, int y, int w, int h, const struct tb_cell* cells);
 // as no tb_clear() and tb_present() calls are made. The buffer is
 // one-dimensional buffer containing lines of cells starting from the top.
 struct tb_cell* tb_cell_buffer(void);
+#endif
 
 #define TB_INPUT_CURRENT 0 // 000
 #define TB_INPUT_ESC     1 // 001

@@ -8,7 +8,13 @@ Termbox 是在一个Linux下的一个轻量级TUI界面库，使用非常广泛�
 
 Termbox的输出字符是采用Unicode编码，即可以支持多语种的绘制，且自动判断字符的宽度。
 
+
+
+## Memory device（内存设备）
+
 Termbox采用memory device的机制，内置两个缓冲区，一个前景缓冲区一个后景缓冲区，Termbox会自动判断需要绘制的内容与当前显示的内容的重复情况，并**只绘制不同的部分**，这使得Termbox绘制界面时速度非常快，并且没有刷新闪动，非常适合串口这种码率低的信道。但是由于需要开辟两个和窗口一样大小的前后景缓冲区，导致内存占用也比较大。以24*80默认终端窗口大小为例，会占用大约50KB的内存空间，并且随着终端窗口的变大，内存占用也会变大。
+
+如果认为默认的memory device机制占用内存过高，可以通过定义宏定义`TB_NO_MEMDEV`来关闭memory device机制。但是需要注意的是，启用memory device和关闭memory device绘制界面的方法是不一样的。关闭memory device后，需要自己在程序中负责重绘。目前给出的demo例程都是基于memory device下绘制的，关闭memory device后demo可能会出现界面绘制异常的问题。
 
 
 

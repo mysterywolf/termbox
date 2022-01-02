@@ -788,6 +788,7 @@ static rt_bool_t extract_event(struct tb_event* event, struct ringbuffer* inbuf,
 /*---------------------termbox---------------------------*/
 #define TERMBOX_WAIT_FOREVER    RT_TICK_MAX/2 - 1
 
+#ifndef TB_NO_MEMDEV
 struct cellbuf
 {
     int width;
@@ -795,9 +796,9 @@ struct cellbuf
     struct tb_cell* cells;
 };
 
-#ifdef TB_USING_FRAMEBUFFER
 #define CELL(buf, x, y) (buf)->cells[(y) * (buf)->width + (x)]
 #endif
+
 #define IS_CURSOR_HIDDEN(cx, cy) (cx == -1 || cy == -1)
 #define LAST_COORD_INIT -1
 
@@ -809,7 +810,7 @@ struct cellbuf
 #define TB_OUTPUT_BUFFER_SIZE 512
 #endif
 
-#ifdef TB_USING_FRAMEBUFFER
+#ifndef TB_NO_MEMDEV
 static struct cellbuf back_buffer;
 static struct cellbuf front_buffer;
 #endif
@@ -835,10 +836,12 @@ static uint32_t foreground = TB_DEFAULT;
 static void write_cursor(int x, int y);
 static void write_sgr(uint32_t fg, uint32_t bg);
 
+#ifndef TB_NO_MEMDEV
 static void cellbuf_init(struct cellbuf* buf, int width, int height);
 static void cellbuf_resize(struct cellbuf* buf, int width, int height);
 static void cellbuf_clear(struct cellbuf* buf);
 static void cellbuf_free(struct cellbuf* buf);
+#endif
 
 static void update_size(void);
 static void update_term_size(void);
@@ -863,7 +866,7 @@ int tb_init(void)
 
     update_term_size();
 
-#ifdef TB_USING_FRAMEBUFFER
+#ifndef TB_NO_MEMDEV
     cellbuf_init(&back_buffer, termw, termh);
     cellbuf_init(&front_buffer, termw, termh);
     cellbuf_clear(&back_buffer);
@@ -890,7 +893,7 @@ void tb_shutdown(void)
     memstream_puts(&write_buffer, funcs[T_EXIT_MOUSE]);
     memstream_flush(&write_buffer);
 
-#ifdef TB_USING_FRAMEBUFFER
+#ifndef TB_NO_MEMDEV
     cellbuf_free(&back_buffer);
     cellbuf_free(&front_buffer);
 #endif
@@ -900,16 +903,14 @@ void tb_shutdown(void)
 
 void tb_present(void)
 {
-#ifdef TB_USING_FRAMEBUFFER
+#ifndef TB_NO_MEMDEV
     int x, y, w, i;
     struct tb_cell* back, *front;
-#endif
 
     // invalidate cursor position
     lastx = LAST_COORD_INIT;
     lasty = LAST_COORD_INIT;
 
-#ifdef TB_USING_FRAMEBUFFER
     if (buffer_size_change_request)
     {
         update_size();
@@ -966,7 +967,7 @@ void tb_present(void)
     {
         write_cursor(cursor_x, cursor_y);
     }
-#endif
+#endif /* TB_NO_MEMDEV */
     memstream_flush(&write_buffer);
 }
 
@@ -993,7 +994,7 @@ void tb_set_cursor(int cx, int cy)
 
 void tb_put_cell(int x, int y, const struct tb_cell* cell)
 {
-#ifdef TB_USING_FRAMEBUFFER
+#ifndef TB_NO_MEMDEV
     if ((unsigned)x >= (unsigned)back_buffer.width)
     {
         return;
@@ -1017,61 +1018,63 @@ void tb_change_cell(int x, int y, uint32_t ch, uint32_t fg, uint32_t bg)
     tb_put_cell(x, y, &c);
 }
 
-//void tb_blit(int x, int y, int w, int h, const struct tb_cell* cells)
-//{
-//    if (x + w < 0 || x >= back_buffer.width)
-//    {
-//        return;
-//    }
+#ifndef TB_NO_MEMDEV
+void tb_blit(int x, int y, int w, int h, const struct tb_cell* cells)
+{
+    if (x + w < 0 || x >= back_buffer.width)
+    {
+        return;
+    }
 
-//    if (y + h < 0 || y >= back_buffer.height)
-//    {
-//        return;
-//    }
+    if (y + h < 0 || y >= back_buffer.height)
+    {
+        return;
+    }
 
-//    int xo = 0, yo = 0, ww = w, hh = h;
+    int xo = 0, yo = 0, ww = w, hh = h;
 
-//    if (x < 0)
-//    {
-//        xo = -x;
-//        ww -= xo;
-//        x = 0;
-//    }
+    if (x < 0)
+    {
+        xo = -x;
+        ww -= xo;
+        x = 0;
+    }
 
-//    if (y < 0)
-//    {
-//        yo = -y;
-//        hh -= yo;
-//        y = 0;
-//    }
+    if (y < 0)
+    {
+        yo = -y;
+        hh -= yo;
+        y = 0;
+    }
 
-//    if (ww > back_buffer.width - x)
-//    {
-//        ww = back_buffer.width - x;
-//    }
+    if (ww > back_buffer.width - x)
+    {
+        ww = back_buffer.width - x;
+    }
 
-//    if (hh > back_buffer.height - y)
-//    {
-//        hh = back_buffer.height - y;
-//    }
+    if (hh > back_buffer.height - y)
+    {
+        hh = back_buffer.height - y;
+    }
 
-//    int sy;
-//    struct tb_cell* dst = &CELL(&back_buffer, x, y);
-//    const struct tb_cell* src = cells + yo * w + xo;
-//    size_t size = sizeof(struct tb_cell) * ww;
+    int sy;
+    struct tb_cell* dst = &CELL(&back_buffer, x, y);
+    const struct tb_cell* src = cells + yo * w + xo;
+    size_t size = sizeof(struct tb_cell) * ww;
 
-//    for (sy = 0; sy < hh; ++sy)
-//    {
-//        rt_memcpy(dst, src, size);
-//        dst += back_buffer.width;
-//        src += w;
-//    }
-//}
+    for (sy = 0; sy < hh; ++sy)
+    {
+        rt_memcpy(dst, src, size);
+        dst += back_buffer.width;
+        src += w;
+    }
+}
 
-//struct tb_cell* tb_cell_buffer(void)
-//{
-//    return back_buffer.cells;
-//}
+struct tb_cell* tb_cell_buffer(void)
+{
+    return back_buffer.cells;
+}
+#endif /* TB_NO_MEMDEV */
 
 int tb_poll_event(struct tb_event* event)
 {
@@ -1101,7 +1104,7 @@ void tb_clear(void)
         buffer_size_change_request = 0;
     }
 
-#ifdef TB_USING_FRAMEBUFFER
+#ifndef TB_NO_MEMDEV
     cellbuf_clear(&back_buffer);
 #endif
 }
@@ -1268,6 +1271,7 @@ static void write_sgr(uint32_t fg, uint32_t bg)
     }
 }
 
+#ifndef TB_NO_MEMDEV
 static void cellbuf_init(struct cellbuf* buf, int width, int height)
 {
     buf->cells = (struct tb_cell*)rt_malloc(sizeof(struct tb_cell) * width * height);
@@ -1335,6 +1339,7 @@ static void cellbuf_free(struct cellbuf* buf)
 {
     rt_free(buf->cells);
 }
+#endif /* TB_NO_MEMDEV */
 
 static void update_term_size(void)
 {
@@ -1492,7 +1497,7 @@ static void send_clear(void)
 static void update_size(void)
 {
     update_term_size();
-#ifdef TB_USING_FRAMEBUFFER
+#ifndef TB_NO_MEMDEV
     cellbuf_resize(&back_buffer, termw, termh);
     cellbuf_resize(&front_buffer, termw, termh);
     cellbuf_clear(&front_buffer);

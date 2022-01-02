@@ -1449,6 +1449,7 @@ static void send_attr(uint32_t fg, uint32_t bg)
         lastfg = fg;
         lastbg = bg;
     }
+#undef LAST_ATTR_INIT
 }
 
 static void send_char(int x, int y, uint32_t c)

@@ -9,12 +9,14 @@
  */
 
 #include <stddef.h>
+#include <string.h>
 #include <fcntl.h>
 #include <poll.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <wcwidth.h>
+#include <posix/stdlib.h>
+#include <posix/wchar.h>
 #include <rtthread.h>
 #include "termbox.h"
 
@@ -276,10 +278,38 @@ static const unsigned char utf8_mask[6] =
     0x01
 };
 
+#if 0
+static const char utf8len_tab[256] = {
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /*bogus*/
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /*bogus*/
+    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+    3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,5,5,5,5,6,6,1,1,
+};
+
 int utf8_char_length(char c)
 {
     return utf8len_tab[(unsigned char)c];
 }
+#else
+int utf8_char_length(char c)
+{
+  if ((signed char)c >= 0) {  // 1-byte char (0x00 ~ 0x7F)
+    return 1;
+  } else if ((c & 0xE0) == 0xC0) {  // 2-byte char
+    return 2;
+  } else if ((c & 0xF0) == 0xE0) {  // 3-byte char
+    return 3;
+  } else if ((c & 0xF8) == 0xF0) {  // 4-byte char
+    return 4;
+  }
+  // invalid char
+  return 0;
+}
+#endif
 
 int utf8_char_to_unicode(uint32_t* out, const char* c)
 {
